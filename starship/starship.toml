@@ -9,7 +9,7 @@ right_format = """"""
 symbol = " " # This creates invisible space to push the time to the right
 
 [username]
-show_always = true
+show_always = false
 style_user = "bold blue"
 format = "[$user]($style) "
 
