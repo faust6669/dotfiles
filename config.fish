@@ -1,0 +1,38 @@
+source /usr/share/cachyos-fish-config/cachyos-config.fish
+
+# overwrite greeting
+# potentially disabling fastfetch
+#function fish_greeting
+#    # smth smth
+#end
+# Inside ~/.config/fish/config.fish
+if test -d ~/.config/emacs/bin
+    set -gx PATH $PATH ~/.config/emacs/bin
+end
+
+
+alias dsync='~/.emacs.d/bin/doom sync'
+
+if status is-interactive
+    # 1. THE TILDE SHORTCUT (For your 60% board)
+    abbr -a tt '~'
+    
+    # 2. NAVIGATION SHORTCUTS
+    
+    
+    # 3. CACHYOS / ARCH UPDATES
+    abbr -a update 'sudo pacman -Syu'
+
+     # 3.5 supposedly auto saves on gh
+  abbr dots 'cd ~/dotfiles && git add . && git commit -m "Update configs" && git push && cd -'
+   
+    # 4. REMOVE THE GREETING (Optional - makes terminal cleaner)
+    set -g fish_greeting ""
+end
+# Force Arch logo and ignore system defaults
+alias fastfetch="fastfetch -c ~/.config/fastfetch/config.jsonc --logo arch"
+fastfetch
+
+starship init fish | source
+
+
