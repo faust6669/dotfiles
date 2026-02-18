@@ -16,7 +16,7 @@ format = "[$user]($style) "
 
 
 [hostname]
-ssh_only = false
+ssh_only = true
 style = "bold green"
 format = "on [$hostname]($style) "
 
