@@ -15,6 +15,7 @@ end
 alias dsync='~/.emacs.d/bin/doom sync'
 
 if status is-interactive
+
     # 1. THE TILDE SHORTCUT (For your 60% board)
     abbr -a tt '~'
     
