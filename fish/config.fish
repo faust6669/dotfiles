@@ -11,6 +11,8 @@ end
 # 3. ALIASES
 alias dsync='~/.emacs.d/bin/doom sync'
 alias fastfetch="fastfetch -c ~/.config/fastfetch/config.jsonc --logo arch"
+alias graph="qpwgraph -a ~/mystudio.xml &"
+alias fix-audio="qpwgraph -a ~/working_setup.xml &; wpctl set-volume @DEFAULT_AUDIO_SINK@ 50%"
 
 # 4. THE NUCLEAR OPTION: Redefine the greeting function
 # This overwrites whatever CachyOS is trying to do.
@@ -31,3 +33,4 @@ end
 
 # 6. PROMPT
 starship init fish | source
+

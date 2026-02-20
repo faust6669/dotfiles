@@ -1,0 +1,9 @@
+[general]
+framerate = 60
+autosens = 1
+bars = 0
+
+[color]
+gradient = 1
+gradient_color_1 = '#59d2ff'
+gradient_color_2 = '#ff7db8'
