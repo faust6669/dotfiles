@@ -1,0 +1,24 @@
+format = "$username$hostname$directory$git_branch$git_status$time$line_break$character"
+
+[username]
+show_always = true
+style_user = "bold blue"
+format = "[$user]($style) "
+
+[hostname]
+ssh_only = false
+format = "@[$hostname](bold yellow) "
+
+[directory]
+style = "bold cyan"
+read_only = ""
+
+[time]
+disabled = false
+format = "at [$time]($style) "
+style = "bold white"
+time_format = "%T"
+
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[✗](bold red)"

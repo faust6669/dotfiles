@@ -31,9 +31,6 @@ if status is-interactive
     abbr dots 'cd ~/dotfiles && git add . && git commit -m "Update configs" && git push && cd -'
 end
 
-# 6. PROMPT
-starship init fish | source
-
 # CachyOS & Intel 12th Gen Gaming Tweaks
 set -gx GAMEMODERUN 1
 set -gx NODEVICE_SELECT 1
@@ -81,6 +78,8 @@ function update
     end
 
     # Return to where you were
-    cd -
+  cd -
 end
 
+set -gx STARSHIP_CONFIG ~/.config/starship.toml
+starship init fish | source
