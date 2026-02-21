@@ -39,3 +39,13 @@ set -gx GAMEMODERUN 1
 set -gx NODEVICE_SELECT 1
 # Uncomment the line below if you want the FPS overlay on EVERY game automatically
 # set -gx MANGOHUD 1
+
+function dots --description 'Sync dotfiles to GitHub'
+    cd ~/dotfiles
+    git add .
+    set -l date_msg (date "+%Y-%m-%d %H:%M")
+    git commit -m "Manual Sync: $date_msg"
+    git push origin main
+    cd -
+    echo "✅ Dotfiles pushed to GitHub!"
+end
