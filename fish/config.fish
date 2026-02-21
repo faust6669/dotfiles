@@ -34,3 +34,8 @@ end
 # 6. PROMPT
 starship init fish | source
 
+# CachyOS & Intel 12th Gen Gaming Tweaks
+set -gx GAMEMODERUN 1
+set -gx NODEVICE_SELECT 1
+# Uncomment the line below if you want the FPS overlay on EVERY game automatically
+# set -gx MANGOHUD 1
