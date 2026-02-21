@@ -40,20 +40,26 @@ set -gx NODEVICE_SELECT 1
 # Uncomment the line below if you want the FPS overlay on EVERY game automatically
 # set -gx MANGOHUD 1
 
-function dots --description 'Sync dotfiles to GitHub with message'
+function dots --description 'Sync dotfiles and update timestamp'
+    set -l target ~/dotfiles/CHEAT_SHEET.md
     cd ~/dotfiles
+
+    # Update the "Last Synced" line in your Cheat Sheet
+    if test -f $target
+        sed -i "s/^> **Last Synced:**.*/> **Last Synced:** "(date "+%Y-%m-%d %H:%M")"/" $target
+    end
+
     git add .
-    
-    # This prompt lets you type a message, or just hit Enter for a default
-    echo -n "📝 Enter commit message (or press Enter for 'Manual Sync'): "
+
+    echo -n "📝 Commit message (Enter for default): "
     read msg
-    
     if test -z "$msg"
         set msg "Manual Sync: "(date "+%Y-%m-%d %H:%M")
     end
-    
+
     git commit -m "$msg"
     git push origin main
     cd -
-    echo "🚀 Dotfiles are live on GitHub!"
+    echo "🚀 GitHub updated and Cheat Sheet timestamped!"
 end
+
