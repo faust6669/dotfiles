@@ -63,3 +63,24 @@ function dots --description 'Sync dotfiles and update timestamp'
     echo "🚀 GitHub updated and Cheat Sheet timestamped!"
 end
 
+function update
+    # 1. Update the System
+    echo "🚀 Starting System Update..."
+    paru -Syu
+
+    # 2. Check Dotfiles for changes
+    echo "📂 Checking Dotfiles..."
+    cd ~/dotfiles
+    if not git diff --quiet
+        echo "✨ Changes detected! Backing up to GitHub..."
+        git add .
+        git commit -m "Auto-backup during system update: $(date +'%Y-%m-%d %H:%M')"
+        git push
+    else
+        echo "✅ Dotfiles are already up to date."
+    end
+
+    # Return to where you were
+    cd -
+end
+

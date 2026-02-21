@@ -63,3 +63,23 @@ Configs are stored in `~/dotfiles` and managed via `install.sh`.
 - **Fix Audio:** `fixaudio` (or `audio-init`)
 - **Reset Scheduler:** `sudo systemctl restart scx`
 
+
+## WezTerm Tiling & Keybinds
+
+     key = 'W', mods = 'CTRL|SHIFT', 
+     key = 'A', mods = 'CTRL|SHIFT', 
+     key = 'S', mods = 'CTRL|SHIFT', 
+     key = 'D', mods = 'CTRL|SHIFT', 
+     key = 'h', mods = 'ALT', 
+     key = 'l', mods = 'ALT', 
+     key = 'k', mods = 'ALT', 
+     key = 'j', mods = 'ALT', 
+     key = 'e', mods = 'ALT', 
+     key = 'r', mods = 'ALT', 
+     key = 't', mods = 'ALT', 
+     key = '[', mods = 'ALT', 
+     key = ']', mods = 'ALT', 
+     key = 'Enter', mods = 'ALT', 
+     key = 'R', mods = 'ALT|SHIFT', 
+     key = 'e', mods = 'CTRL', 
+     key = 'w', mods = 'ALT', 
