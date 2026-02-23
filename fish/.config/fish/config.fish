@@ -29,6 +29,7 @@ if status is-interactive
     abbr -a --position anywhere tt '~'
     abbr -a update 'sudo pacman -Syu'
     abbr dots 'cd ~/dotfiles && git add . && git commit -m "Update configs" && git push && cd -'
+    abbr -a --save twin 'ollama run mytwin'
 end
 
 # CachyOS & Intel 12th Gen Gaming Tweaks
