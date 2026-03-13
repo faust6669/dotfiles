@@ -1,29 +1,29 @@
 #!/bin/bash
 
-# Get the directory where this script is located
+# Navigate to script directory
 DOTFILES_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+cd "$DOTFILES_DIR"
 
-echo "Starting CachyOS Dotfiles Installation..."
+echo "🚀 Starting CachyOS Dotfiles Installation..."
 
-# 1. Ensure GNU Stow is installed
-if ! command -v stow &> /dev/null; then
-    echo "Stow not found. Installing..."
-    sudo pacman -S --needed stow
-fi
+# 1. Install dependencies (CachyOS uses paru/pacman)
+sudo pacman -S --needed stow fish wezterm hyprland
 
-# 2. List the packages you want to stow
-# Match these names to your folder names in ~/dotfiles
-packages=(
-    "wezterm"
-    "fish"
-    "hypr"
-)
+# 2. Define your packages
+packages=("wezterm" "fish" "hypr")
 
-# 3. Loop through and stow
+# 3. The "CachyOS Fix": Remove/Backup existing folders so Stow can link
 for package in "${packages[@]}"; do
-    echo "Linking $package..."
-    # --adopt is key: it merges existing configs into your dotfiles
-    stow -v --adopt "$package"
+    if [ -d "$HOME/.config/$package" ] && [ ! -L "$HOME/.config/$package" ]; then
+        echo "⚠️  Found existing config for $package. Backing up..."
+        mv "$HOME/.config/$package" "$HOME/.config/${package}.bak"
+    fi
 done
 
-
+# 4. Perform the Stowing
+for package in "${packages[@]}"; do
+    echo "🔗 Linking $package..."
+    # -R (Restow) is great for updating links
+    # -t ~ (Target) explicitly tells it to go to your home folder
+    stow -R -v -t "$HOME" "$package"
+done
