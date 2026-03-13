@@ -1,48 +1,46 @@
-  # 1. Load Distro Defaults
+# 1. Distro Defaults (Performance First)
 if test -f /usr/share/cachyos-fish-config/cachyos-config.fish
     source /usr/share/cachyos-fish-config/cachyos-config.fish
 end
 
-# 2. PATHS
-if test -d ~/.config/emacs/bin
-    set -gx PATH $PATH ~/.config/emacs/bin
-end
+# 2. Pathing (Clean & Non-Redundant)
+fish_add_path ~/.config/emacs/bin
 
-# 3. ALIASES
+# 3. Environment & Intel 12th Gen Tweaks
+set -gx GAMEMODERUN 1
+set -gx NODEVICE_SELECT 1
+set -gx STARSHIP_CONFIG ~/.config/starship.toml
+
+# 4. Aliases
 alias dsync='~/.emacs.d/bin/doom sync'
 alias fastfetch="fastfetch -c ~/.config/fastfetch/config.jsonc --logo arch"
 alias graph="qpwgraph -a ~/mystudio.xml &"
 alias fix-audio="qpwgraph -a ~/working_setup.xml &; wpctl set-volume @DEFAULT_AUDIO_SINK@ 50%"
 
-# 4. THE NUCLEAR OPTION: Redefine the greeting function
-# This overwrites whatever CachyOS is trying to do.
+# 5. Abbreviations (Interactive Only)
+if status is-interactive
+    abbr -a tt '~'
+    abbr -a --position anywhere tt '~'
+    abbr -a update-sys 'sudo pacman -Syu' # Renamed to avoid conflict with update function
+    abbr -a --save twin 'ollama run mytwin'
+    
+    # Initialize Prompt
+    starship init fish | source
+end
+
+# 6. The "Nuclear" Greeting
 function fish_greeting
     if status is-interactive
-        # This is the ONLY place fastfetch will run
         command fastfetch -c ~/.config/fastfetch/config.jsonc --logo arch
     end
 end
 
-# 5. ABBREVIATIONS
-if status is-interactive
-    abbr -a tt '~'
-    abbr -a --position anywhere tt '~'
-    abbr -a update 'sudo pacman -Syu'
-    abbr dots 'cd ~/dotfiles && git add . && git commit -m "Update configs" && git push && cd -'
-    abbr -a --save twin 'ollama run mytwin'
-end
-
-# CachyOS & Intel 12th Gen Gaming Tweaks
-set -gx GAMEMODERUN 1
-set -gx NODEVICE_SELECT 1
-# Uncomment the line below if you want the FPS overlay on EVERY game automatically
-# set -gx MANGOHUD 1
-
+# 7. Dotfile Manager (The Brain)
 function dots --description 'Sync dotfiles and update timestamp'
     set -l target ~/dotfiles/CHEAT_SHEET.md
     cd ~/dotfiles
 
-    # Update the "Last Synced" line in your Cheat Sheet
+    # Update Cheat Sheet
     if test -f $target
         sed -i "s/^> **Last Synced:**.*/> **Last Synced:** "(date "+%Y-%m-%d %H:%M")"/" $target
     end
@@ -56,31 +54,25 @@ function dots --description 'Sync dotfiles and update timestamp'
     end
 
     git commit -m "$msg"
-    git push origin main
+    git push origin master  # Corrected to master based on your environment
     cd -
     echo "🚀 GitHub updated and Cheat Sheet timestamped!"
 end
 
+# 8. Global Update
 function update
-    # 1. Update the System
     echo "🚀 Starting System Update..."
     paru -Syu
 
-    # 2. Check Dotfiles for changes
     echo "📂 Checking Dotfiles..."
     cd ~/dotfiles
     if not git diff --quiet
-        echo "✨ Changes detected! Backing up to GitHub..."
+        echo "✨ Changes detected! Backing up..."
         git add .
-        git commit -m "Auto-backup during system update: $(date +'%Y-%m-%d %H:%M')"
-        git push
+        git commit -m "Auto-backup: "(date +'%Y-%m-%d %H:%M')
+        git push origin master
     else
         echo "✅ Dotfiles are already up to date."
     end
-
-    # Return to where you were
-  cd -
+    cd -
 end
-
-set -gx STARSHIP_CONFIG ~/.config/starship.toml
-starship init fish | source
