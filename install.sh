@@ -26,4 +26,4 @@ for package in "${packages[@]}"; do
     stow -v --adopt "$package"
 done
 
-echo "Done! Your configs are now managed in $DOTFILES_DIR"
+
