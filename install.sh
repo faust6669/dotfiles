@@ -1,29 +1,28 @@
+
 #!/bin/bash
 
-# Navigate to script directory
-DOTFILES_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-cd "$DOTFILES_DIR"
+# 1. Define where your dots are (Get current directory)
+DOTFILES_DIR=$(pwd)
 
-echo "🚀 Starting CachyOS Dotfiles Installation..."
+# 2. List the folders/files you want to link
+# Add your specific folder names here (e.g., "fastfetch", "sway", "plasma")
+CONFIGS=("fastfetch" "konsole" "kglobalshortcutsrc" "plasmarc")
 
-# 1. Install dependencies (CachyOS uses paru/pacman)
-sudo pacman -S --needed stow fish wezterm hyprland
+echo "Starting CachyOS Plasma Dotfile Deployment..."
 
-# 2. Define your packages
-packages=("wezterm" "fish" "hypr")
+# 3. Create .config if it doesn't exist
+mkdir -p ~/.config
 
-# 3. The "CachyOS Fix": Remove/Backup existing folders so Stow can link
-for package in "${packages[@]}"; do
-    if [ -d "$HOME/.config/$package" ] && [ ! -L "$HOME/.config/$package" ]; then
-        echo "⚠️  Found existing config for $package. Backing up..."
-        mv "$HOME/.config/$package" "$HOME/.config/${package}.bak"
+for folder in "${CONFIGS[@]}"; do
+    if [ -e "$DOTFILES_DIR/$folder" ]; then
+        echo "Linking $folder..."
+        # Remove existing file/link to avoid "folder inside folder" errors
+        rm -rf "$HOME/.config/$folder"
+        # Create the new link
+        ln -sf "$DOTFILES_DIR/$folder" "$HOME/.config/$folder"
+    else
+        echo "Warning: $folder not found in repo, skipping."
     fi
 done
 
-# 4. Perform the Stowing
-for package in "${packages[@]}"; do
-    echo "🔗 Linking $package..."
-    # -R (Restow) is great for updating links
-    # -t ~ (Target) explicitly tells it to go to your home folder
-    stow -R -v -t "$HOME" "$package"
-done
+echo "Done! Restart Plasma (or log out/in) to see changes."
