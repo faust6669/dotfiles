@@ -1,28 +1,52 @@
+#!/usr/bin/env bash
 
-#!/bin/bash
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+RED='\033[0;31m'
+NC='\033[0m'
 
-# 1. Define where your dots are (Get current directory)
-DOTFILES_DIR=$(pwd)
+echo -e "${BLUE}🚀 Starting CachyOS Dotfile Symlinking...${NC}"
 
-# 2. List the folders/files you want to link
-# Add your specific folder names here (e.g., "fastfetch", "sway", "plasma")
-CONFIGS=("fastfetch" "konsole" "kglobalshortcutsrc" "plasmarc")
+DOTFILES_DIR="$HOME/dotfiles"
+CONFIG_DIR="$HOME/.config"
 
-echo "Starting CachyOS Plasma Dotfile Deployment..."
+mkdir -p "$CONFIG_DIR"
 
-# 3. Create .config if it doesn't exist
-mkdir -p ~/.config
-
-for folder in "${CONFIGS[@]}"; do
-    if [ -e "$DOTFILES_DIR/$folder" ]; then
-        echo "Linking $folder..."
-        # Remove existing file/link to avoid "folder inside folder" errors
-        rm -rf "$HOME/.config/$folder"
-        # Create the new link
-        ln -sf "$DOTFILES_DIR/$folder" "$HOME/.config/$folder"
-    else
-        echo "Warning: $folder not found in repo, skipping."
+link_file() {
+    local src=$1
+    local dst=$2
+    
+    if [ ! -e "$src" ]; then
+        echo -e "${RED}❌ Source missing:${NC} $src"
+        return
     fi
-done
 
-echo "Done! Restart Plasma (or log out/in) to see changes."
+    # Crucial: Remove existing file/link to avoid "folder inside folder" errors
+    rm -rf "$dst"
+    
+    mkdir -p "$(dirname "$dst")"
+    
+    ln -s "$src" "$dst"
+    echo -e "${GREEN}✅ Linked:${NC} $dst -> $src"
+}
+
+# --- 1. FISH SETUP ---
+echo -e "${BLUE}Setting up Fish...${NC}"
+# POINT TO THE REAL FILE: Changed from config.fish.save to config.fish
+link_file "$DOTFILES_DIR/fish/config.fish"      "$CONFIG_DIR/fish/config.fish"
+link_file "$DOTFILES_DIR/fish/fish_variables"   "$CONFIG_DIR/fish/fish_variables"
+link_file "$DOTFILES_DIR/fish/conf.d"           "$CONFIG_DIR/fish/conf.d"
+link_file "$DOTFILES_DIR/fish/functions"        "$CONFIG_DIR/fish/functions"
+
+# --- 2. APP CONFIGS ---
+echo -e "${BLUE}Setting up Apps...${NC}"
+
+link_file "$DOTFILES_DIR/starship"              "$CONFIG_DIR/starship.toml"
+link_file "$DOTFILES_DIR/wezterm"               "$CONFIG_DIR/wezterm"
+link_file "$DOTFILES_DIR/yazi"                  "$CONFIG_DIR/yazi"
+link_file "$DOTFILES_DIR/cava/config"           "$CONFIG_DIR/cava/config"
+
+# Correcting Fastfetch path to match the standard config location
+link_file "$DOTFILES_DIR/fastfetch.jsonc"       "$CONFIG_DIR/fastfetch/config.jsonc"
+
+echo -e "\n${BLUE}⭐ All set! Open a new terminal to see the changes.${NC}"
