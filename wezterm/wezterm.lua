@@ -30,6 +30,19 @@ config.keys = {
     { key = 'Enter', mods = 'ALT', action = act.TogglePaneZoomState },
     { key = 'R', mods = 'ALT|SHIFT', action = act.ReloadConfiguration },
 }
+
+config.key_tables = {
+  resize_pane = {
+    { key = 'h', action = act.AdjustPaneSize { 'Left', 1 } },
+    { key = 'l', action = act.AdjustPaneSize { 'Right', 1 } },
+    { key = 'k', action = act.AdjustPaneSize { 'Up', 1 } },
+    { key = 'j', action = act.AdjustPaneSize { 'Down', 1 } },
+    -- Press Escape or Enter to exit resize mode
+    { key = 'Escape', action = 'PopKeyTable' },
+    { key = 'Enter', action = 'PopKeyTable' },
+  },
+}
+
 return config
                                
 
