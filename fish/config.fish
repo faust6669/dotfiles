@@ -1,33 +1,78 @@
-# 1. Disable the CachyOS greeting and the "double" function
-set -g fish_greeting ""
-functions -e fastfetch 2>/dev/null
+# 1. Distro Defaults (Performance First)
+if test -f /usr/share/cachyos-fish-config/cachyos-config.fish
+    source /usr/share/cachyos-fish-config/cachyos-config.fish
+end
 
-# 2. Initialize Starship (The Theme)
-if type -q starship
+# 2. Pathing (Clean & Non-Redundant)
+fish_add_path ~/.config/emacs/bin
+
+# 3. Environment & Intel 12th Gen Tweaks
+set -gx GAMEMODERUN 1
+set -gx NODEVICE_SELECT 1
+set -gx STARSHIP_CONFIG ~/.config/starship.toml
+
+# 4. Aliases
+alias dsync='~/.emacs.d/bin/doom sync'
+alias fastfetch="fastfetch -c ~/.config/fastfetch/config.jsonc --logo arch"
+alias graph="qpwgraph -a ~/mystudio.xml &"
+alias fix-audio="qpwgraph -a ~/working_setup.xml &; wpctl set-volume @DEFAULT_AUDIO_SINK@ 50%"
+
+# 5. Abbreviations (Interactive Only)
+if status is-interactive
+    abbr -a tt '~'
+    abbr -a --position anywhere tt '~'
+    abbr -a update-sys 'sudo pacman -Syu' # Renamed to avoid conflict with update function
+    abbr -a --save twin 'ollama run mytwin'
+    
+    # Initialize Prompt
     starship init fish | source
 end
 
-# 3. Path and Editor setup
-if test -d ~/.config/emacs/bin
-    set -gx PATH $PATH ~/.config/emacs/bin
+# 6. The "Nuclear" Greeting
+function fish_greeting
+    if status is-interactive
+        command fastfetch -c ~/.config/fastfetch/config.jsonc --logo arch
+    end
 end
 
-# 4. Aliases and Abbreviations
-alias dsync='~/.emacs.d/bin/doom sync'
-alias dots='cd ~/dotfiles && git add . && git commit -m "Update configs" && git push && cd -'
+# 7. Dotfile Manager (The Brain)
+function dots --description 'Sync dotfiles and update timestamp'
+    set -l target ~/dotfiles/CHEAT_SHEET.md
+    cd ~/dotfiles
 
-if status is-interactive
-    # The Tilde shortcut for your 60% board
-    abbr -a tt '~'
-    # Update shortcut
-    abbr -a update 'sudo pacman -Syu'
+    # Update Cheat Sheet
+    if test -f $target
+        sed -i "s/^> **Last Synced:**.*/> **Last Synced:** "(date "+%Y-%m-%d %H:%M")"/" $target
+    end
 
-    # 5. Run your Custom Fastfetch ONCE
-    # We point to your specific config and force the Arch logo here
-    command fastfetch --config ~/.config/fastfetch/config.jsonc --logo arch
+    git add .
+
+    echo -n "📝 Commit message (Enter for default): "
+    read msg
+    if test -z "$msg"
+        set msg "Manual Sync: "(date "+%Y-%m-%d %H:%M")
+    end
+
+    git commit -m "$msg"
+    git push origin master  # Corrected to master based on your environment
+    cd -
+    echo "🚀 GitHub updated and Cheat Sheet timestamped!"
 end
 
-keychain --eval --quiet id_ed25519 | source
+# 8. Global Update
+function update
+    echo "🚀 Starting System Update..."
+    paru -Syu
 
-bind -e \ce
-bind --erase \ce
+    echo "📂 Checking Dotfiles..."
+    cd ~/dotfiles
+    if not git diff --quiet
+        echo "✨ Changes detected! Backing up..."
+        git add .
+        git commit -m "Auto-backup: "(date +'%Y-%m-%d %H:%M')
+        git push origin master
+    else
+        echo "✅ Dotfiles are already up to date."
+    end
+    cd -
+end
