@@ -27,4 +27,7 @@ if status is-interactive
     command fastfetch --config ~/.config/fastfetch/config.jsonc --logo arch
 end
 
-keychain --eval --agents ssh id_ed25519 | source
+keychain --eval --quiet id_ed25519 | source
+
+bind -e \ce
+bind --erase \ce
