@@ -34,7 +34,7 @@ link_file() {
 
 # --- 1. FISH SETUP ---
 echo -e "${BLUE}Setting up Fish...${NC}"
-# Linking the main config and support folders [cite: 29, 32]
+# Use the nested path found in your repo [cite: 2, 63]
 link_file "$DOTFILES_DIR/fish/.config/fish/config.fish" "$CONFIG_DIR/fish/config.fish"
 link_file "$DOTFILES_DIR/fish/fish_variables"            "$CONFIG_DIR/fish/fish_variables"
 link_file "$DOTFILES_DIR/fish/conf.d"                    "$CONFIG_DIR/fish/conf.d"
@@ -43,9 +43,13 @@ link_file "$DOTFILES_DIR/fish/functions"                 "$CONFIG_DIR/fish/funct
 # --- 2. APP CONFIGS ---
 echo -e "${BLUE}Setting up Apps...${NC}"
 
-# Starship: Fixed the double-link error 
-link_file "$DOTFILES_DIR/starship/.config/starship.toml" "$CONFIG_DIR/starship.toml"
+# Fixes the "No such file" error by pointing to the exact .lua file [cite: 3, 72]
+link_file "$DOTFILES_DIR/wezterm/.config/wezterm/wezterm.lua" "$CONFIG_DIR/wezterm/wezterm.lua"
 
+# Starship and others [cite: 3, 30]
+link_file "$DOTFILES_DIR/starship/.config/starship.toml" "$CONFIG_DIR/starship.toml"
+link_file "$DOTFILES_DIR/yazi/.config/yazi"              "$CONFIG_DIR/yazi"
+link_file "$DOTFILES_DIR/fastfetch.jsonc"                "$CONFIG_DIR/fastfetch/config.jsonc"
 # WezTerm: Linking the whole directory for Lua modules [cite: 30, 72]
 link_file "$DOTFILES_DIR/wezterm/.config/wezterm"        "$CONFIG_DIR/wezterm"
 
