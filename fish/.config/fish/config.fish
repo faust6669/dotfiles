@@ -58,19 +58,23 @@ function dots --description 'Sync dotfiles and update timestamp'
 end
 
 # 8. Global Update (FIXED END ADDED)
-function update
-    echo "🚀 Starting System Update..." 
-    paru -Syu 
+function update --wraps='sudo pacman -Syu'
+    echo "🚀 Starting System Update..."
+    paru -Syu
 
-    echo "📂 Checking Dotfiles..." 
-    cd ~/dotfiles || return 
-    if not git diff --quiet 
-        echo "✨ Changes detected! Backing up..." 
-        git add . 
-        git commit -m "Auto-backup: "(date +'%Y-%m-%d %H:%M') 
-        git push origin master 
+    echo "📂 Checking Dotfiles..."
+    cd ~/dotfiles || return
+    
+    # 1. Pull first to avoid the [rejected] error
+    git pull --rebase origin master
+
+    if not git diff --quiet
+        echo "✨ Changes detected! Backing up..."
+        git add .
+        git commit -m "Auto-backup: "(date +'%Y-%m-%d %H:%M')
+        git push origin master
     else
-        echo "✅ Dotfiles are already up to date." 
-    end # <--- This was the missing end for 'if not git diff'
-    cd - 
-end # <--- This is the end for 'function update'
+        echo "✅ Dotfiles are already up to date."
+    end
+    cd -
+end
