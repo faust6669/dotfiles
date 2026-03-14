@@ -40,6 +40,7 @@ link_file "$DOTFILES_DIR/fish/functions"        "$CONFIG_DIR/fish/functions"
 
 # --- 2. APP CONFIGS ---
 echo -e "${BLUE}Setting up Apps...${NC}"
+link_file "$DOTFILES_DIR/starship/starship.toml" "$CONFIG_DIR/starship.toml"
 
 link_file "$DOTFILES_DIR/starship"              "$CONFIG_DIR/starship.toml"
 link_file "$DOTFILES_DIR/wezterm"               "$CONFIG_DIR/wezterm"
