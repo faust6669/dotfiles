@@ -30,5 +30,7 @@ config.keys = {
     { key = 'Enter', mods = 'ALT', action = act.TogglePaneZoomState },
     { key = 'R', mods = 'ALT|SHIFT', action = act.ReloadConfiguration },
 }
+return config
+                               
 
 
