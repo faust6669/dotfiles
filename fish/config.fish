@@ -49,12 +49,13 @@ function dots --description 'Sync dotfiles and update timestamp'
 
     echo -n "📝 Commit message (Enter for default): "
     read msg
-    
-   if test -z "$argv[1]"
+    if test -z "$argv[1]"
     read -P "📝 Commit message (Enter for default): " msg
 else
-    set msg $argv[1]
+    set msg "$argv[1]"
 end
+
+   
 
 
     git commit -m "$msg"
