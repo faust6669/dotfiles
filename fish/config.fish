@@ -1,3 +1,6 @@
+Here is the complete, rewritten ~/.config/fish/config.fish file. I’ve cleaned up the syntax errors in Section 7, removed the redundant code, and added proper quoting to ensure your Intel 12th Gen tweaks and aliases run smoothly.
+Code snippet
+
 # 1. Distro Defaults (Performance First)
 if test -f /usr/share/cachyos-fish-config/cachyos-config.fish
     source /usr/share/cachyos-fish-config/cachyos-config.fish
@@ -15,13 +18,13 @@ set -gx STARSHIP_CONFIG ~/.config/starship.toml
 alias dsync='~/.emacs.d/bin/doom sync'
 alias fastfetch="fastfetch -c ~/.config/fastfetch/config.jsonc --logo arch"
 alias graph="qpwgraph -a ~/mystudio.xml &"
-alias fix-audio="qpwgraph -a ~/working_setup.xml &; wpctl set-volume @DEFAULT_AUDIO_SINK@ 50%"
+alias fix-audio="qpwgraph -a ~/working_setup.xml; and wpctl set-volume @DEFAULT_AUDIO_SINK@ 50%"
 
 # 5. Abbreviations (Interactive Only)
 if status is-interactive
     abbr -a tt '~'
     abbr -a --position anywhere tt '~'
-    abbr -a update-sys 'sudo pacman -Syu' # Renamed to avoid conflict with update function
+    abbr -a update-sys 'sudo pacman -Syu'
     abbr -a --save twin 'ollama run mytwin'
     
     # Initialize Prompt
@@ -38,28 +41,27 @@ end
 # 7. Dotfile Manager (The Brain)
 function dots --description 'Sync dotfiles and update timestamp'
     set -l target ~/dotfiles/CHEAT_SHEET.md
-    cd ~/dotfiles
+    cd ~/dotfiles || return
 
     # Update Cheat Sheet
-    if test -f $target
-        sed -i "s|^> \*\*Last Synced:\*\*.*|> **Last Synced:** "(date "+%Y-%m-%d %H:%M")"|" $target
+    if test -f "$target"
+        sed -i "s|^> \*\*Last Synced:\*\*.*|> **Last Synced:** "(date "+%Y-%m-%d %H:%M")"|" "$target"
     end
 
     git add .
 
-    echo -n "📝 Commit message (Enter for default): "
-    read msg
-     if test -z "$argv[1]"
-    read -P "📝 Commit message (Enter for default): " msg
-   else
-    set msg "$argv[1]"
-  end
-
-   
-
+    # Logic: Use argument if provided, otherwise prompt for message
+    if test -n "$argv[1]"
+        set msg "$argv[1]"
+    else
+        read -P "📝 Commit message (Enter for default): " msg
+        if test -z "$msg"
+            set msg "Update: "(date "+%Y-%m-%d %H:%M")
+        end
+    end
 
     git commit -m "$msg"
-    git push origin master  # Corrected to master based on your environment
+    git push origin master
     cd -
     echo "🚀 GitHub updated and Cheat Sheet timestamped!"
 end
@@ -70,7 +72,7 @@ function update
     paru -Syu
 
     echo "📂 Checking Dotfiles..."
-    cd ~/dotfiles
+    cd ~/dotfiles || return
     if not git diff --quiet
         echo "✨ Changes detected! Backing up..."
         git add .
