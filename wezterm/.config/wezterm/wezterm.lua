@@ -9,7 +9,7 @@ config.color_scheme = 'Dracula'
 config.font = wezterm.font 'FiraCode Nerd Font'
 config.font_size = 11.0
 config.window_background_opacity = 0.9
-config.window_decorations = "RESIZE"
+config.window_decorations = "NONE"
 config.window_padding = { left = 12, right = 12, top = 10, bottom = 10 }
 config.hide_tab_bar_if_only_one_tab = true
 config.window_close_confirmation = 'NeverPrompt'
