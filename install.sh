@@ -1,8 +1,3 @@
-To make this actually work, you need a clean install.sh that accounts for the nested folders in your repository while ensuring the symbolic links land in the correct places in ~/.config.
-
-Here is the complete, corrected install.sh file. You can copy and paste this directly:
-Bash
-
 #!/usr/bin/env bash
 
 # Colors for pretty output
