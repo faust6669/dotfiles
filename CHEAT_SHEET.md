@@ -1,5 +1,5 @@
 # 🐧 Dave's 2026 CachyOS & i5-12th Gen Master Sheet
-> **Last Synced:** 2026-03-14 01:32
+> **Last Synced:** 2026-03-14 02:22
 ## 💻 Hardware & System Core
 - **CPU:** Intel i5-12th Gen (Hybrid Architecture)
   - **P-Cores:** 0-11 (Performance / Heavy Lifting)
