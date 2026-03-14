@@ -42,7 +42,7 @@ function dots --description 'Sync dotfiles and update timestamp'
 
     # Update Cheat Sheet
     if test -f $target
-        sed -i "s/^> **Last Synced:**.*/> **Last Synced:** "(date "+%Y-%m-%d %H:%M")"/" $target
+        sed -i "s|^> \*\*Last Synced:\*\*.*|> **Last Synced:** "(date "+%Y-%m-%d %H:%M")"|" $target
     end
 
     git add .
