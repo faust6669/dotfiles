@@ -5,22 +5,34 @@
         "type": "builtin",
         "padding": {
             "top": 2,
-            "left": 2
+            "right": 4
+        }
+    },
+    "display": {
+        "separator": " ➜ ",
+        "key": {
+            "width": 10
         }
     },
     "modules": [
         "title",
         "separator",
         "os",
-        "host",
         "kernel",
         "uptime",
         "packages",
         "shell",
         "terminal",
-        "cpu",
-        "gpu",
+        {
+            "type": "cpu",
+            "format": "{1}"
+        },
         "memory",
-        "colors"
+        "break",
+        "colors",
+        "break",
+        "break",
+        "break" 
     ]
 }
+

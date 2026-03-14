@@ -22,7 +22,7 @@ if status is-interactive
     abbr -a tt '~' 
     abbr -a --position anywhere tt '~' 
     abbr -a update-sys 'sudo pacman -Syu' 
-    abbr -a --save twin 'ollama run mytwin' 
+    abbr -a twin 'ollama run mytwin' 
     
     starship init fish | source 
 end
