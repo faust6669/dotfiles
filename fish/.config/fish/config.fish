@@ -73,6 +73,29 @@ function update
         git push origin master
     else
         echo "✅ Dotfiles are already up to date."
+# 8. Global Update
+function update
+    echo "🚀 Starting System Update..."
+    # Perform system update; only proceed to dotfiles if successful
+    if paru -Syu
+        echo "📂 Checking Dotfiles..."
+        cd ~/dotfiles || return
+
+        # Pull first to ensure we aren't out of sync with GitHub
+        git pull origin master --rebase
+
+        if not git diff --quiet
+            echo "✨ Changes detected! Backing up..."
+            git add .
+            git commit -m "Auto-backup: (date +'%Y-%m-%d %H:%M')"
+            git push origin master
+        else
+            echo "✅ Dotfiles are already up to date."
+        end
+        
+        cd - # Return to previous directory
+    else
+        echo "❌ System update failed. Skipping dotfile backup."
     end
-    cd -
 end
+
