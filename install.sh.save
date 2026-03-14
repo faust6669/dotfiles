@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+# Colors for pretty output
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}🚀 Starting Dotfile Symlinking...${NC}"
+
+# Define the source (repo) and target (config)
+DOTFILES_DIR="$HOME/dotfiles"
+CONFIG_DIR="$HOME/.config"
+
+# Create .config if it doesn't exist
+mkdir -p "$CONFIG_DIR"
+
+# Function to safely symlink
+link_file() {
+    local src=$1
+    local dst=$2
+    
+    # Remove existing file or symlink
+    rm -rf "$dst"
+    
+    # Create the link
+    ln -s "$src" "$dst"
+    echo -e "${GREEN}✅ Linked:${NC} $dst -> $src"
+}
+
+# 1. FISH SETUP
+mkdir -p "$CONFIG_DIR/fish"
+link_file "$DOTFILES_DIR/fish/config.fish.save" "$CONFIG_DIR/fish/config.fish"
+link_file "$DOTFILES_DIR/fish/fish_variables"   "$CONFIG_DIR/fish/fish_variables"
+link_file "$DOTFILES_DIR/fish/conf.d"           "$CONFIG_DIR/fish/conf.d"
+link_file "$DOTFILES_DIR/fish/functions"        "$CONFIG_DIR/fish/functions"
+
+# 2. APP CONFIGS
+link_file "$DOTFILES_DIR/starship"              "$CONFIG_DIR/starship.toml"
+link_file "$DOTFILES_DIR/wezterm"               "$CONFIG_DIR/wezterm"
+mkdir -p "$CONFIG_DIR/fish"
+link_file "$DOTFILES_DIR/fish/config.fish.save" "$CONFIG_DIR/fish/config.fish"
+link_file "$DOTFILES_DIR/fish/fish_variables"   "$CONFIG_DIR/fish/fish_variables"
+link_file "$DOTFILES_DIR/fish/conf.d"           "$CONFIG_DIR/fish/conf.d"
+link_file "$DOTFILES_DIR/fish/functions"        "$CONFIG_DIR/fish/functions"
+
+# 2. APP CONFIGS
+link_file "$DOTFILES_DIR/starship"              "$CONFIG_DIR/starship.toml"
+link_file "$DOTFILES_DIR/wezterm"               "$CONFIG_DIR/wezterm"
+link_file "$DOTFILES_DIR/yazi"                  "$CONFIG_DIR/yazi"link_file "$DOTFILES_DIR/yazi"                  "$CONFIG_DIR/yazi"
+link_file "$DOTFILES_DIR/cava"                  "$CONFIG_DIR/cava"
+link_file "$DOTFILES_DIR/fastfetch.jsonc"       "$CONFIG_DIR/fastfetch/config.jsonc"
+
+echo -e "${BLUE}⭐ All set! Restart your terminal or run 'source ~/.config/fish/config.fish'${NC}"q
