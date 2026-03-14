@@ -1,6 +1,3 @@
-Here is the complete, rewritten ~/.config/fish/config.fish file. I’ve cleaned up the syntax errors in Section 7, removed the redundant code, and added proper quoting to ensure your Intel 12th Gen tweaks and aliases run smoothly.
-Code snippet
-
 # 1. Distro Defaults (Performance First)
 if test -f /usr/share/cachyos-fish-config/cachyos-config.fish
     source /usr/share/cachyos-fish-config/cachyos-config.fish
