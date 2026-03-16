@@ -9,6 +9,7 @@ SETUVAR __fish_initialized:4300
 SETUVAR __fish_webconfig_theme_notification:set\x2dtheme\x2dv1\x2d\x237
 SETUVAR _fisher_upgraded_to_4_4:\x1d
 SETUVAR abbr_tt:\x7e
+SETUVAR fish_color_command:59d2ff\x1e\x2d\x2dbold
 SETUVAR fish_user_paths:/home/dave/\x2eemacs\x2ed/bin
 SETUVAR pure_begin_prompt_with_current_directory:true
 SETUVAR pure_check_for_new_release:false
