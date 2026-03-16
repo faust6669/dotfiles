@@ -78,3 +78,5 @@ function update --wraps='sudo pacman -Syu'
     end
     cd -
 end
+ulimit -l unlimited
+ulimit -l unlimited
