@@ -1,31 +1,45 @@
-#!/usr/bin/env fish
+#!/usr/bin/fish
 
-echo "--- 🛠️  Installing Dependencies ---"
-# Check for pacman (Arch/CachyOS) and install required tools
-if command -v pacman > /dev/null
-    sudo pacman -S --needed stow fastfetch starship wezterm yazi bat cava
-end
+# Define Paths
+set -l DOTFILES_DIR $HOME/dotfiles
+set -l TARGET_DIR $HOME/.config
 
-echo "--- 🚀 Deploying Dotfiles ---"
-# 1. Ensure we are in the dotfiles directory
-cd (dirname (status filename))
+# 1. FORCE STARSHIP (Name visible, No Blocks)
+set -Ux STARSHIP_CONFIG $TARGET_DIR/starship.toml
+rm -rf $TARGET_DIR/starship.toml
+echo 'format = "$username$hostname$directory$git_branch$character"
+[username]
+show_always = true
+style_user = "bold blue"
+format = "[$user]($style) "
+[hostname]
+ssh_only = false
+format = "@[$hostname](bold magenta) "
+[directory]
+style = "bold cyan"
+[character]
+success_symbol = "➜ "
+error_symbol = "➜ "' > $DOTFILES_DIR/starship/.config/starship.toml
 
-# 2. Fix the Fish function path manually [cite: 1, 2, 10]
-# This links cheat.fish without wiping your existing config.fish
-mkdir -p ~/.config/fish/functions
-ln -sf (pwd)/fish/.config/fish/functions/cheat.fish ~/.config/fish/functions/cheat.fish
+# 2. FORCE WEZTERM (Borderless, Ctrl+E shortcuts)
+rm -rf $TARGET_DIR/wezterm
+mkdir -p $TARGET_DIR/wezterm
+echo "local wezterm = require 'wezterm'
+local act = wezterm.action
+local config = wezterm.config_builder()
+config.color_scheme = 'Catppuccin Mocha'
+config.font = wezterm.font('JetBrains Mono')
+config.window_decorations = 'NONE'
+config.enable_tab_bar = false
+config.window_padding = { left = 5, right = 5, top = 5, bottom = 5 }
+config.keys = {
+  { key = 'e', mods = 'CTRL', action = act.CloseCurrentTab { confirm = false } },
+  { key = 'E', mods = 'CTRL|SHIFT', action = act.SpawnWindow },
+}
+return config" > $DOTFILES_DIR/wezterm/.config/wezterm/wezterm.lua
 
-# 3. Deploy the nested packages using Stow [cite: 1, 3]
-for folder in cava fastfetch starship wezterm yazi
-    stow -v --adopt $folder
-end
+# 3. LINK EVERYTHING
+ln -sf $DOTFILES_DIR/starship/.config/starship.toml $TARGET_DIR/starship.toml
+ln -sf $DOTFILES_DIR/wezterm/.config/wezterm/wezterm.lua $TARGET_DIR/wezterm/wezterm.lua
 
-# 4. Revert any local system changes pulled in by --adopt
-git checkout .
-
-# 5. Initialize Starship in config.fish if not already there 
-if not grep -q "starship init fish" ~/.config/fish/config.fish
-    echo "starship init fish | source" >> ~/.config/fish/config.fish
-end
-
-echo "--- 🎉 All done! Restart Fish to see your new prompt. ---"
+echo 'Settings locked and replaced!' 

@@ -1,4 +1,4 @@
-format = "$username$hostname$directory$git_branch$git_status$time$line_break$character"
+format = "$username$hostname$directory$git_branch$character"
 
 [username]
 show_always = true
@@ -7,18 +7,13 @@ format = "[$user]($style) "
 
 [hostname]
 ssh_only = false
-format = "@[$hostname](bold yellow) "
+format = "@[$hostname](bold magenta) "
 
 [directory]
 style = "bold cyan"
-read_only = ""
-
-[time]
-disabled = false
-format = "at [$time]($style) "
-style = "bold white"
-time_format = "%T"
+truncation_length = 3
 
 [character]
-success_symbol = "[➜](bold green)"
-error_symbol = "[✗](bold red)"
+success_symbol = "➜ "
+error_symbol = "➜ "
+
