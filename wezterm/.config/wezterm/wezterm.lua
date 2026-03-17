@@ -12,9 +12,10 @@ config.window_padding = { left = 12, right = 12, top = 10, bottom = 10 }
 config.hide_tab_bar_if_only_one_tab = true
 config.window_close_confirmation = 'NeverPrompt'
 
--- CURSOR CUSTOMIZATION
-config.default_cursor_style = 'SteadyUnderline'
+-- CURSOR CUSTOMIZATION (Blinking Underline)
+config.default_cursor_style = 'BlinkingUnderline'
 config.cursor_thickness = 1
+config.cursor_blink_rate = 600 -- Milliseconds per blink
 
 config.colors = {
     -- Making the underline pop with Dracula Purple
