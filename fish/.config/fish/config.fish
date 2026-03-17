@@ -1,82 +1,62 @@
-# 1. Distro Defaults (Performance First)
-if test -f /usr/share/cachyos-fish-config/cachyos-config.fish
-    source /usr/share/cachyos-fish-config/cachyos-config.fish 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CACHYOS & BASIC DEFAULTS
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+if status is-interactive
+    # Standard CachyOS / Interactive shell setup
+    fastfetch
 end
 
-# 2. Pathing
-fish_add_path ~/.config/emacs/bin 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CURSOR & KEYBINDING TWEAKS
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Force thin underline for all modes
+set -g fish_cursor_default underline
+set -g fish_cursor_insert underline
+set -g fish_cursor_replace_one underline
+set -g fish_cursor_visual underline
 
-# 3. Environment & Intel 12th Gen Tweaks
-set -gx GAMEMODERUN 1 
-set -gx NODEVICE_SELECT 1 
-set -gx STARSHIP_CONFIG ~/.config/starship.toml 
+# Stop Fish from intercepting Ctrl+E so WezTerm can close panes
+bind -e \ce
 
-# 4. Aliases
-alias dsync='~/.emacs.d/bin/doom sync' 
-alias fastfetch="fastfetch -c ~/.config/fastfetch/config.jsonc --logo arch" 
-alias graph="qpwgraph -a ~/mystudio.xml &" 
-alias fix-audio="qpwgraph -a ~/working_setup.xml; and wpctl set-volume @DEFAULT_AUDIO_SINK@ 50%" 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ALIASES
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+alias dsync='rsync -avP'
+alias graph='git log --oneline --graph --decorate --all'
+alias fix-audio='systemctl --user restart pipewire pipewire-pulse wireplumber'
 
-# 5. Abbreviations
-if status is-interactive 
-    abbr -a tt '~' 
-    abbr -a --position anywhere tt '~' 
-    abbr -a update-sys 'sudo pacman -Syu' 
-    abbr -a twin 'ollama run mytwin' 
-    
-    starship init fish | source 
-end
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# THE DOTS SYNC FUNCTION
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function dots
+    set -l target "$HOME/dotfiles/CHEAT_SHEET.md"
 
-# 6. Greeting
-function fish_greeting
-    if status is-interactive 
-        command fastfetch -c ~/.config/fastfetch/config.jsonc --logo arch 
-    end
-end
-
-# 7. Dotfile Manager
-function dots --description 'Sync dotfiles and update timestamp'
-    set -l target ~/dotfiles/CHEAT_SHEET.md [cite: 63]
-    cd ~/dotfiles || return [cite: 63]
-
-    if test -f $target [cite: 63]
-        sed -i "s/^> \*\*Last Synced:\*\*.*/> **Last Synced:** "(date "+%Y-%m-%d %H:%M")"/" $target [cite: 63]
+    # Update Timestamp in Cheat Sheet
+    if test -f "$target"
+        set -l current_date (date "+%Y-%m-%d %H:%M:%S")
+        sed -i "s/Last Updated: .*/Last Updated: $current_date/" "$target"
     end
 
-    git add . [cite: 63]
+    # Stage changes in the dotfiles repo
+    git -C ~/dotfiles add .
 
-    echo -n "📝 Commit message (Enter for default): " [cite: 64]
-    read msg [cite: 64]
-    if test -z "$msg" [cite: 64]
-        set msg "Manual Sync: "(date "+%Y-%m-%d %H:%M") [cite: 64]
+    # Prompt for message
+    echo "📝 Commit message (Enter for default):"
+    read -l msg
+
+    if test -z "$msg"
+        set msg "Manual dotfile sync on $(date '+%Y-%m-%d')"
     end
 
-    git commit -m "$msg" [cite: 64]
-    git push origin master [cite: 64]
-    cd - [cite: 64]
-    echo "🚀 GitHub updated and Cheat Sheet timestamped!" [cite: 64]
+    # Push to master
+    git -C ~/dotfiles commit -m "$msg"
+    git -C ~/dotfiles push origin master
+
+    echo "🚀 GitHub updated and Cheat Sheet timestamped!"
 end
 
-# 8. Global Update (FIXED END ADDED)
-function update --wraps='sudo pacman -Syu'
-    echo "🚀 Starting System Update..."
-    paru -Syu
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# STARSHIP PROMPT (Keep at the end)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+starship init fish | source
 
-    echo "📂 Checking Dotfiles..."
-    cd ~/dotfiles || return
-    
-    # 1. Pull first to avoid the [rejected] error
-    git pull --rebase origin master
-
-    if not git diff --quiet
-        echo "✨ Changes detected! Backing up..."
-        git add .
-        git commit -m "Auto-backup: "(date +'%Y-%m-%d %H:%M')
-        git push origin master
-    else
-        echo "✅ Dotfiles are already up to date."
-    end
-    cd -
-end
-ulimit -l unlimited
-ulimit -l unlimited
