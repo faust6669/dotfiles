@@ -1,4 +1,6 @@
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # CACHYOS & BASIC DEFAULTS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if status is-interactive
@@ -19,15 +21,22 @@ set -g fish_cursor_visual underline
 bind -e \ce
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ALIASES
+# ALIASES & ABBREVIATIONS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 alias dsync='rsync -avP'
 alias graph='git log --oneline --graph --decorate --all'
 alias fix-audio='systemctl --user restart pipewire pipewire-pulse wireplumber'
 
+# Terminal Resizing Abbreviations
+abbr -a rsz_tall  "printf '\e[8;60;120t'"
+abbr -a rsz_wide  "printf '\e[8;40;160t'"
+abbr -a rsz_reset "printf '\e[8;35;120t'"
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# THE DOTS SYNC FUNCTION
+# FUNCTIONS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# The Dots Sync Function
 function dots
     set -l target "$HOME/dotfiles/CHEAT_SHEET.md"
 
@@ -40,7 +49,7 @@ function dots
     # Stage changes in the dotfiles repo
     git -C ~/dotfiles add .
 
-    # Prompt for message
+    # Prompt for message [cite: 3]
     echo "📝 Commit message (Enter for default):"
     read -l msg
 
@@ -55,8 +64,16 @@ function dots
     echo "🚀 GitHub updated and Cheat Sheet timestamped!"
 end
 
+# Dynamic Resize Function (Usage: rsz rows cols)
+function rsz
+    if test (count $argv) -eq 2
+        printf "\e[8;$argv[1];$argv[2]t"
+    else
+        echo "Usage: rsz [rows] [cols]"
+    end
+end
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # STARSHIP PROMPT (Keep at the end)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 starship init fish | source
-
