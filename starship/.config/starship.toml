@@ -1,4 +1,4 @@
-format = "$username$hostname$directory$git_branc$python$character"
+format = "$username$hostname$directory$git_branch$python$character"
 
 [username]
 show_always = true
@@ -19,9 +19,12 @@ error_symbol = "➜ "
 
 [python]
 symbol = "🐍 "
-pyenv_version_name = true
-python_binary = ["python3", "python"]
+
+# Only show if these specific files are in the CURRENT folder
 detect_extensions = ["py"]
-detect_files = [".python-version", "requirements.txt", "pyproject.toml", "setup.py"]
-# This ensures it shows up if the virtual env is active:
-format = 'via [${symbol}${version}]($style)' 
+detect_files = ["requirements.txt", "pyproject.toml", "setup.py", "bench_control.py"]
+
+# Show pyenv version if applicable
+pyenv_version_name = true
+
+format = 'via [${symbol}${version} (\($virtualenv\))]($style) '
