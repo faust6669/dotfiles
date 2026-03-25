@@ -1,4 +1,4 @@
-format = "$username$hostname$directory$git_branch$character"
+format = "$username$hostname$directory$git_branc$python$character"
 
 [username]
 show_always = true
