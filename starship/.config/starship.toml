@@ -17,3 +17,11 @@ truncation_length = 3
 success_symbol = "➜ "
 error_symbol = "➜ "
 
+[python]
+symbol = "🐍 "
+pyenv_version_name = true
+python_binary = ["python3", "python"]
+detect_extensions = ["py"]
+detect_files = [".python-version", "requirements.txt", "pyproject.toml", "setup.py"]
+# This ensures it shows up if the virtual env is active:
+format = 'via [${symbol}${version}]($style)' 
