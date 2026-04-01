@@ -26,6 +26,7 @@ bind -e \ce
 alias dsync='rsync -avP'
 alias graph='git log --oneline --graph --decorate --all'
 alias fix-audio='systemctl --user restart pipewire pipewire-pulse wireplumber'
+alias vst-win='cd "/mnt/windows/Program Files/Common Files/VST3/"'
 
 # Terminal Resizing Abbreviations
 abbr -a rsz_tall  "printf '\e[8;60;120t'"
@@ -77,3 +78,4 @@ end
 # STARSHIP PROMPT (Keep at the end)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 starship init fish | source
+ulimit -n 524288
