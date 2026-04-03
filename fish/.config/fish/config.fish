@@ -50,18 +50,28 @@ abbr -a conf  'nano ~/.config/fish/config.fish' # Edit this file fast
 
 # The Dots Sync Function
 function dots
-    set -l target "$HOME/dotfiles/CHEAT_SHEET.md"
+    set -l dotdir "$HOME/dotfiles"
+    set -l target "$dotdir/CHEAT_SHEET.md"
 
-    # Update Timestamp in Cheat Sheet
+    # 1. THE STOW STEP (The missing piece)
+    # This ensures everything in your dotfiles folder is properly
+    # symlinked to your Home directory before you push.
+    echo "🔗 Refreshing symlinks with Stow..."
+    # We use 'pushd' to jump into the directory and 'popd' to jump back
+    pushd $dotdir
+    # This stows every top-level folder (fish, wezterm, etc.)
+    stow * popd
+
+    # 2. Update Timestamp in Cheat Sheet
     if test -f "$target"
         set -l current_date (date "+%Y-%m-%d %H:%M:%S")
         sed -i "s/Last Updated: .*/Last Updated: $current_date/" "$target"
     end
 
-    # Stage changes in the dotfiles repo
-    git -C ~/dotfiles add .
+    # 3. Stage changes
+    git -C $dotdir add .
 
-    # Prompt for message [cite: 3]
+    # 4. Prompt for message
     echo "📝 Commit message (Enter for default):"
     read -l msg
 
@@ -69,12 +79,13 @@ function dots
         set msg "Manual dotfile sync on $(date '+%Y-%m-%d')"
     end
 
-    # Push to master
-    git -C ~/dotfiles commit -m "$msg"
-    git -C ~/dotfiles push origin master
+    # 5. Push to master
+    git -C $dotdir commit -m "$msg"
+    git -C $dotdir push origin master
 
-    echo "🚀 GitHub updated and Cheat Sheet timestamped!"
+    echo "🚀 System linked, GitHub updated, and Cheat Sheet timestamped!"
 end
+
 
 # Dynamic Resize Function (Usage: rsz rows cols)
 function rsz
