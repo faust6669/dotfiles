@@ -1,13 +1,29 @@
+
+# Main prompt on the left (your existing setup)
 format = "$username$hostname$directory$git_branch$character"
+
+# Move the time to the right side
+right_format = "$time"
+
 [username]
 show_always = true
 style_user = "bold blue"
 format = "[$user]($style) "
+
 [hostname]
 ssh_only = false
 format = "@[$hostname](bold magenta) "
+
 [directory]
 style = "bold cyan"
+
 [character]
 success_symbol = "➜ "
 error_symbol = "➜ "
+
+# Time module configuration
+[time]
+disabled = false
+format = "[$time]($style)"
+style = "bold yellow"
+use_12hr = true
