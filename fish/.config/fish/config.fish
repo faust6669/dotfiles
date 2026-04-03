@@ -13,6 +13,7 @@ end
 # CURSOR & KEYBINDING TWEAKS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Force thin underline for all modes
+
 set -g fish_cursor_default underline
 set -g fish_cursor_insert underline
 set -g fish_cursor_replace_one underline
@@ -20,7 +21,6 @@ set -g fish_cursor_visual underline
 
 # Stop Fish from intercepting Ctrl+E so WezTerm can close panes
 bind -e \ce
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # ALIASES & ABBREVIATIONS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,12 +28,10 @@ alias dsync='rsync -avP'
 alias graph='git log --oneline --graph --decorate --all'
 alias fix-audio='systemctl --user restart pipewire pipewire-pulse wireplumber'
 alias vst-win='cd "/mnt/windows/Program Files/Common Files/VST3/"'
-
 # Terminal Resizing Abbreviations
 abbr -a rsz_tall  "printf '\e[8;60;120t'"
 abbr -a rsz_wide  "printf '\e[8;40;160t'"
 abbr -a rsz_reset "printf '\e[8;35;120t'"
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # MY CUSTOM ABBREVIATIONS (Hard-Coded for Portability)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -42,7 +40,6 @@ abbr -a dots  'dots'                             # Runs your GitHub sync functio
 abbr -a gs    'git status'                       # Quick git check
 abbr -a bench 'cd ~/dotfiles/scripts'            # Quick jump to your Python tools
 abbr -a conf  'nano ~/.config/fish/config.fish'  # Edit this file fast
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # FUNCTIONS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -88,4 +85,7 @@ end
 # STARSHIP PROMPT (Keep at the end)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 starship init fish | source
-# Test sync
+# Force cursor to a blinking underline on every new prompt
+function reset_cursor_to_blink_underline --on-event fish_prompt
+    echo -ne "\e[3 q"
+end
