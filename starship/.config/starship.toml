@@ -1,30 +1,13 @@
-format = "$username$hostname$directory$git_branch$python$character"
-
+format = "$username$hostname$directory$git_branch$character"
 [username]
 show_always = true
 style_user = "bold blue"
 format = "[$user]($style) "
-
 [hostname]
 ssh_only = false
 format = "@[$hostname](bold magenta) "
-
 [directory]
 style = "bold cyan"
-truncation_length = 3
-
 [character]
 success_symbol = "➜ "
 error_symbol = "➜ "
-
-[python]
-symbol = "🐍 "
-
-# Only show if these specific files are in the CURRENT folder
-detect_extensions = ["py"]
-detect_files = ["requirements.txt", "pyproject.toml", "setup.py", "bench_control.py"]
-
-# Show pyenv version if applicable
-pyenv_version_name = true
-
-format = 'via [${symbol}${version} (\($virtualenv\))]($style) '
