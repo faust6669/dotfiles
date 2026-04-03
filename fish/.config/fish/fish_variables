@@ -1,6 +1,17 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
+SETUVAR --export SSH_AGENT_PID:1262
+SETUVAR --export SSH_AUTH_SOCK:/home/dave/\x2essh/agent/s\x2e33NJfY7haf\x2eagent\x2eSWy74NUrxu
+SETUVAR --export STARSHIP_CONFIG:/home/dave/\x2econfig/starship\x2etoml
+SETUVAR --export TERMINAL:wezterm
+SETUVAR __done_min_cmd_duration:10000
+SETUVAR __done_notification_urgency_level:low
 SETUVAR __fish_initialized:4300
+SETUVAR __fish_webconfig_theme_notification:set\x2dtheme\x2dv1\x2d\x237
+SETUVAR _fisher_upgraded_to_4_4:\x1d
+SETUVAR abbr_tt:\x7e
+SETUVAR fish_color_command:59d2ff\x1e\x2d\x2dbold
+SETUVAR fish_user_paths:/home/dave/\x2eemacs\x2ed/bin
 SETUVAR pure_begin_prompt_with_current_directory:true
 SETUVAR pure_check_for_new_release:false
 SETUVAR pure_color_at_sign:pure_color_mute
