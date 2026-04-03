@@ -34,6 +34,17 @@ abbr -a rsz_wide  "printf '\e[8;40;160t'"
 abbr -a rsz_reset "printf '\e[8;35;120t'"
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# MY CUSTOM ABBREVIATIONS (Hard-Coded for Portability)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+abbr -a tt --position anywhere "~"                        # Your "Tilde" shortcut
+abbr -a dots  'dots'                   # Runs your GitHub sync function
+abbr -a gs    'git status'             # Quick git check
+abbr -a bench 'cd ~/dotfiles/scripts'  # Quick jump to your Python tools
+abbr -a conf  'nano ~/.config/fish/config.fish' # Edit this file fast
+
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # FUNCTIONS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
