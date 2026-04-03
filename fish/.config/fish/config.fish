@@ -88,3 +88,4 @@ end
 # STARSHIP PROMPT (Keep at the end)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 starship init fish | source
+# Test sync
