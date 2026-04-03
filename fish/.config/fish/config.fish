@@ -47,54 +47,46 @@ abbr -a conf  'nano ~/.config/fish/config.fish' # Edit this file fast
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # FUNCTIONS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-# The Dots Sync Function
 function dots
+    # 1. Define our paths
     set -l dotdir "$HOME/dotfiles"
     set -l target "$dotdir/CHEAT_SHEET.md"
 
-    # 1. THE STOW STEP (The missing piece)
-    # This ensures everything in your dotfiles folder is properly
-    # symlinked to your Home directory before you push.
+    # 2. Refresh the Symlinks
+    # 'pushd' moves us to the folder, 'stow *' links everything
+    # except what's in .stow-local-ignore, and 'popd' brings us back.
     echo "🔗 Refreshing symlinks with Stow..."
-    # We use 'pushd' to jump into the directory and 'popd' to jump back
     pushd $dotdir
-    # This stows every top-level folder (fish, wezterm, etc.)
-    stow * popd
+    stow *
+    popd
 
-    # 2. Update Timestamp in Cheat Sheet
+    # 3. Update Timestamp in Cheat Sheet
     if test -f "$target"
         set -l current_date (date "+%Y-%m-%d %H:%M:%S")
+        # In Fish, we use quotes around variables in sed
         sed -i "s/Last Updated: .*/Last Updated: $current_date/" "$target"
     end
 
-    # 3. Stage changes
+    # 4. Git Operations
+    echo "📦 Staging changes in $dotdir..."
     git -C $dotdir add .
 
-    # 4. Prompt for message
     echo "📝 Commit message (Enter for default):"
     read -l msg
 
     if test -z "$msg"
-        set msg "Manual dotfile sync on $(date '+%Y-%m-%d')"
+        set msg "Manual dotfile sync on (date '+%Y-%m-%d')"
     end
 
-    # 5. Push to master
+    echo "🚀 Pushing to GitHub..."
     git -C $dotdir commit -m "$msg"
     git -C $dotdir push origin master
 
-    echo "🚀 System linked, GitHub updated, and Cheat Sheet timestamped!"
+    echo "✅ System synced and GitHub updated!"
 end
 
 
-# Dynamic Resize Function (Usage: rsz rows cols)
-function rsz
-    if test (count $argv) -eq 2
-        printf "\e[8;$argv[1];$argv[2]t"
-    else
-        echo "Usage: rsz [rows] [cols]"
-    end
-end
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # STARSHIP PROMPT (Keep at the end)
