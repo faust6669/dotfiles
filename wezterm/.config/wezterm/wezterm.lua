@@ -21,23 +21,26 @@ config.keys = {
   { key = 'E', mods = 'CTRL|SHIFT', action = act.SpawnWindow },
 
   -- WASD Directional Splits (CTRL + SHIFT)
+  -- Creates a new tile in the specified direction
   { key = 'W', mods = 'CTRL|SHIFT', action = act.SplitPane { direction = 'Up', size = { Percent = 50 } } },
   { key = 'S', mods = 'CTRL|SHIFT', action = act.SplitPane { direction = 'Down', size = { Percent = 50 } } },
   { key = 'A', mods = 'CTRL|SHIFT', action = act.SplitPane { direction = 'Left', size = { Percent = 50 } } },
   { key = 'D', mods = 'CTRL|SHIFT', action = act.SplitPane { direction = 'Right', size = { Percent = 50 } } },
 
   -- WASD Navigation (CTRL only)
+  -- Moves your cursor focus between existing tiles
   { key = 'w', mods = 'CTRL', action = act.ActivatePaneDirection 'Up' },
   { key = 's', mods = 'CTRL', action = act.ActivatePaneDirection 'Down' },
   { key = 'a', mods = 'CTRL', action = act.ActivatePaneDirection 'Left' },
   { key = 'd', mods = 'CTRL', action = act.ActivatePaneDirection 'Right' },
 
   -- Tile Management
-  { key = 'f', mods = 'CTRL', action = act.CloseCurrentPane { confirm = false } }, -- Close Tile
-  { key = 'Enter', mods = 'ALT', action = act.TogglePaneZoomState },               -- Fullscreen Tile
+  { key = 'f', mods = 'CTRL', action = act.CloseCurrentPane { confirm = false } },
+  { key = 'Enter', mods = 'ALT', action = act.TogglePaneZoomState },
 }
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- FINAL RETURN
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 return config
+
