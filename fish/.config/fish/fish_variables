@@ -8,6 +8,9 @@ SETUVAR __done_min_cmd_duration:10000
 SETUVAR __done_notification_urgency_level:low
 SETUVAR __fish_initialized:4300
 SETUVAR __fish_webconfig_theme_notification:set\x2dtheme\x2dv1\x2d\x237
+SETUVAR _fisher_plugins:realiserad/fish\x2dai\x1erealiserad/fish\x2dai\x40main
+SETUVAR _fisher_realiserad_2F_fish_2D_ai_40_main_files:\x7e/\x2econfig/fish/functions/_fish_ai_autocomplete\x2efish\x1e\x7e/\x2econfig/fish/functions/_fish_ai_autocomplete_or_fix\x2efish\x1e\x7e/\x2econfig/fish/functions/_fish_ai_codify\x2efish\x1e\x7e/\x2econfig/fish/functions/_fish_ai_codify_or_explain\x2efish\x1e\x7e/\x2econfig/fish/functions/_fish_ai_explain\x2efish\x1e\x7e/\x2econfig/fish/functions/_fish_ai_fix\x2efish\x1e\x7e/\x2econfig/fish/functions/fish_ai_bug_report\x2efish\x1e\x7e/\x2econfig/fish/functions/fish_ai_put_api_key\x2efish\x1e\x7e/\x2econfig/fish/functions/fish_ai_switch_context\x2efish\x1e\x7e/\x2econfig/fish/conf\x2ed/fish_ai\x2efish
+SETUVAR _fisher_realiserad_2F_fish_2D_ai_files:\x7e/\x2econfig/fish/functions/_fish_ai_autocomplete\x2efish\x1e\x7e/\x2econfig/fish/functions/_fish_ai_autocomplete_or_fix\x2efish\x1e\x7e/\x2econfig/fish/functions/_fish_ai_codify\x2efish\x1e\x7e/\x2econfig/fish/functions/_fish_ai_codify_or_explain\x2efish\x1e\x7e/\x2econfig/fish/functions/_fish_ai_explain\x2efish\x1e\x7e/\x2econfig/fish/functions/_fish_ai_fix\x2efish\x1e\x7e/\x2econfig/fish/functions/fish_ai_bug_report\x2efish\x1e\x7e/\x2econfig/fish/functions/fish_ai_put_api_key\x2efish\x1e\x7e/\x2econfig/fish/functions/fish_ai_switch_context\x2efish\x1e\x7e/\x2econfig/fish/conf\x2ed/fish_ai\x2efish
 SETUVAR _fisher_upgraded_to_4_4:\x1d
 SETUVAR abbr_tt:\x7e
 SETUVAR fish_color_command:59d2ff\x1e\x2d\x2dbold
