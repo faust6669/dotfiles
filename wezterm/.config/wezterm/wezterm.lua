@@ -16,43 +16,25 @@ config.window_padding = { left = 5, right = 5, top = 5, bottom = 5 }
 -- KEYBINDINGS (config.keys)
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 config.keys = {
-  -- Existing Tab & Window Management
+  -- Tab & Window Management
   { key = 'e', mods = 'CTRL', action = act.CloseCurrentTab { confirm = false } },
   { key = 'E', mods = 'CTRL|SHIFT', action = act.SpawnWindow },
 
   -- WASD Directional Splits (CTRL + SHIFT)
-  -- 'w' for Up, 's' for Down, 'a' for Left, 'd' for Right
-  {
-    key = 'W',
-    mods = 'CTRL|SHIFT',
-    action = act.SplitPane { direction = 'Up', size = { Percent = 50 } }
-  },
-  {
-    key = 'S',
-    mods = 'CTRL|SHIFT',
-    action = act.SplitPane { direction = 'Down', size = { Percent = 50 } }
-  },
-  {
-    key = 'A',
-    mods = 'CTRL|SHIFT',
-    action = act.SplitPane { direction = 'Left', size = { Percent = 50 } }
-  },
-  {
-    key = 'D',
-    mods = 'CTRL|SHIFT',
-    action = act.SplitPane { direction = 'Right', size = { Percent = 50 } }
-  },
+  { key = 'W', mods = 'CTRL|SHIFT', action = act.SplitPane { direction = 'Up', size = { Percent = 50 } } },
+  { key = 'S', mods = 'CTRL|SHIFT', action = act.SplitPane { direction = 'Down', size = { Percent = 50 } } },
+  { key = 'A', mods = 'CTRL|SHIFT', action = act.SplitPane { direction = 'Left', size = { Percent = 50 } } },
+  { key = 'D', mods = 'CTRL|SHIFT', action = act.SplitPane { direction = 'Right', size = { Percent = 50 } } },
 
-  -- HJKL Navigation (ALT + Direction)
-  -- Used to move your focus between the panes you just created
-  { key = 'h', mods = 'ALT', action = act.ActivatePaneDirection 'Left' },
-  { key = 'l', mods = 'ALT', action = act.ActivatePaneDirection 'Right' },
-  { key = 'k', mods = 'ALT', action = act.ActivatePaneDirection 'Up' },
-  { key = 'j', mods = 'ALT', action = act.ActivatePaneDirection 'Down' },
+  -- WASD Navigation (CTRL only)
+  { key = 'w', mods = 'CTRL', action = act.ActivatePaneDirection 'Up' },
+  { key = 's', mods = 'CTRL', action = act.ActivatePaneDirection 'Down' },
+  { key = 'a', mods = 'CTRL', action = act.ActivatePaneDirection 'Left' },
+  { key = 'd', mods = 'CTRL', action = act.ActivatePaneDirection 'Right' },
 
-  -- Extra Management
-  { key = 'Enter', mods = 'ALT', action = act.TogglePaneZoomState }, -- Fullscreen a pane
-  { key = 'w', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
+  -- Tile Management
+  { key = 'f', mods = 'CTRL', action = act.CloseCurrentPane { confirm = false } }, -- Close Tile
+  { key = 'Enter', mods = 'ALT', action = act.TogglePaneZoomState },               -- Fullscreen Tile
 }
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
