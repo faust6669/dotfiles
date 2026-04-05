@@ -38,6 +38,8 @@ abbr -a rsz_reset "printf '\e[8;35;120t'"
 # MY CUSTOM ABBREVIATIONS (Hard-Coded for Portability)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 abbr -a tt --position anywhere "~"               # Your "Tilde" shortcut
+abbr -a lab 'source ~/env/bench/bin/activate.fish && cd ~/dotfiles/scripts'
+#go right into env
 abbr -a dots  'dots'                             # Runs your GitHub sync function
 abbr -a gs    'git status'                       # Quick git check
 abbr -a bench 'cd ~/dotfiles/scripts'            # Quick jump to your tools
