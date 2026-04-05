@@ -42,7 +42,13 @@ abbr -a dots  'dots'                             # Runs your GitHub sync functio
 abbr -a gs    'git status'                       # Quick git check
 abbr -a bench 'cd ~/dotfiles/scripts'            # Quick jump to your tools
 abbr -a conf  'nano ~/.config/fish/config.fish'  # Edit this file fast
-
+# Modern LS replacement (eza)
+if type -q eza
+    abbr -a ls 'eza --icons --group-directories-first'
+    abbr -a ll 'eza -l --icons --group-directories-first'
+    abbr -a la 'eza -la --icons --group-directories-first'
+    abbr -a tree 'eza --tree --icons'
+end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # FUNCTIONS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
