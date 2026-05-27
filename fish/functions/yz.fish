@@ -1,0 +1,1 @@
+/home/dave/dotfiles/fish/functions/yz.fish

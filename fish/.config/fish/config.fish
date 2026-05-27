@@ -28,6 +28,7 @@ alias dsync='rsync -avP'
 alias graph='git log --oneline --graph --decorate --all'
 alias fix-audio='systemctl --user restart pipewire pipewire-pulse wireplumber'
 alias vst-win='cd "/mnt/windows/Program Files/Common Files/VST3/"'
+alias yz="yazi"
 
 # Terminal Resizing Abbreviations
 abbr -a rsz_tall  "printf '\e[8;60;120t'"
@@ -49,6 +50,8 @@ if type -q eza
     abbr -a ls 'eza --icons --group-directories-first'
     abbr -a ll 'eza -l --icons --group-directories-first'
     abbr -a la 'eza -la --icons --group-directories-first'
+
+
     abbr -a tree 'eza --tree --icons'
 end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
