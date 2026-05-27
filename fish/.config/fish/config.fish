@@ -30,6 +30,8 @@ alias fix-audio='systemctl --user restart pipewire pipewire-pulse wireplumber'
 alias vst-win='cd "/mnt/windows/Program Files/Common Files/VST3/"'
 alias yz="yazi"
 
+
+
 # Terminal Resizing Abbreviations
 abbr -a rsz_tall  "printf '\e[8;60;120t'"
 abbr -a rsz_wide  "printf '\e[8;40;160t'"
@@ -45,6 +47,8 @@ abbr -a dots  'dots'                             # Runs your GitHub sync functio
 abbr -a gs    'git status'                       # Quick git check
 abbr -a bench 'cd ~/dotfiles/scripts'            # Quick jump to your tools
 abbr -a conf  'nano ~/.config/fish/config.fish'  # Edit this file fast
+abbr -a fresh 'source ~/.config/fish/config.fish; echo "🔄 Fish configuration reloaded!"' #refresh terminal
+
 # Modern LS replacement (eza)
 if type -q eza
     abbr -a ls 'eza --icons --group-directories-first'
