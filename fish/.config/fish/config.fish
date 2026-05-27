@@ -60,7 +60,6 @@ function dots
     set -l target "$dotdir/CHEAT_SHEET.md"
 
     # 2. Refresh the Symlinks
-    # Using --restow ensures any new files in your subfolders get linked
     echo "🔗 Refreshing symlinks with Stow..."
     pushd $dotdir
     stow --restow */
@@ -69,19 +68,18 @@ function dots
     # 3. Update Timestamp in Cheat Sheet
     if test -f "$target"
         set -l current_date (date "+%Y-%m-%d %H:%M:%S")
-        # Use | as a delimiter to prevent conflicts with date formatting
         sed -i "s|Last Updated: .*|Last Updated: $current_date|" "$target"
         echo "📝 Timestamp updated in CHEAT_SHEET.md"
     end
 
     # 4. Git Operations
-    echo "📦 Staging changes in $dotdir..."
-    git -C $dotdir add .
-
-    # Check if there are actually changes to commit
-    if git -C $dotdir diff --staged --quiet
+    # Check if there are any changes (tracked or untracked) BEFORE staging
+    if test -z (git -C $dotdir status --porcelain)
         echo "✨ No changes to commit. Everything is up to date!"
     else
+        echo "📦 Staging changes in $dotdir..."
+        git -C $dotdir add .
+
         echo "📝 Commit message (Enter for default):"
         read -l msg
 
@@ -90,10 +88,8 @@ function dots
             set msg "Manual dotfile sync on $d"
         end
 
-        echo "🚀 Pushing to GitHub (main)..."
+        echo "🚀 Committing and Pushing to GitHub (main)..."
         git -C $dotdir commit -m "$msg"
-
-        # FIXED: Changed master to main to match your GitHub repo
         git -C $dotdir push origin main
 
         echo "✅ System synced and GitHub updated!"
