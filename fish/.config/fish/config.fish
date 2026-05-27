@@ -111,3 +111,4 @@ function reset_cursor_to_blink_underline --on-event fish_prompt
 end
 
 
+starship init fish | source
