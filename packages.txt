@@ -9,6 +9,7 @@ github-cli
 ripgrep
 fd
 fzf
+lsd
 
 # --- Development & Audio Lab Tools ---
 neovim

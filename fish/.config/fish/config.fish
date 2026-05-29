@@ -30,8 +30,6 @@ alias fix-audio='systemctl --user restart pipewire pipewire-pulse wireplumber'
 alias vst-win='cd "/mnt/windows/Program Files/Common Files/VST3/"'
 alias yz="yazi"
 
-
-
 # Terminal Resizing Abbreviations
 abbr -a rsz_tall  "printf '\e[8;60;120t'"
 abbr -a rsz_wide  "printf '\e[8;40;160t'"
@@ -42,22 +40,20 @@ abbr -a rsz_reset "printf '\e[8;35;120t'"
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 abbr -a tt --position anywhere "~"               # Your "Tilde" shortcut
 abbr -a lab 'source ~/env/bench/bin/activate.fish && cd ~/dotfiles/scripts'
-#go right into env
 abbr -a dots  'dots'                             # Runs your GitHub sync function
 abbr -a gs    'git status'                       # Quick git check
 abbr -a bench 'cd ~/dotfiles/scripts'            # Quick jump to your tools
 abbr -a conf  'nano ~/.config/fish/config.fish'  # Edit this file fast
-abbr -a fresh 'source ~/.config/fish/config.fish; echo "🔄 Fish configuration reloaded!"' #refresh terminal
+abbr -a fresh 'source ~/.config/fish/config.fish; echo "🔄 Fish configuration reloaded!"' # refresh terminal
 
-# Modern LS replacement (eza)
-if type -q eza
-    abbr -a ls 'eza --icons --group-directories-first'
-    abbr -a ll 'eza -l --icons --group-directories-first'
-    abbr -a la 'eza -la --icons --group-directories-first'
-
-
-    abbr -a tree 'eza --tree --icons'
+# Modern LS replacement (lsd)
+if type -q lsd
+    abbr -a ls 'lsd --icon always --group-dirs first'
+    abbr -a ll 'lsd -l --icon always --group-dirs first'
+    abbr -a la 'lsd -la --icon always --group-dirs first'
+    abbr -a tree 'lsd --tree --icon always'
 end
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # FUNCTIONS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,9 +77,7 @@ function dots
 
     # 4. Git Operations
     # Check if there are any changes (tracked or untracked) BEFORE staging
-    if test -z (git -C $dotdir status --porcelain)
-        echo "✨ No changes to commit. Everything is up to date!"
-    else
+    if test -n "$(git -C $dotdir status --porcelain)"
         echo "📦 Staging changes in $dotdir..."
         git -C $dotdir add .
 
@@ -100,6 +94,8 @@ function dots
         git -C $dotdir push origin main
 
         echo "✅ System synced and GitHub updated!"
+    else
+        echo "✨ No changes to commit. Everything is up to date!"
     end
 end
 
@@ -112,6 +108,3 @@ starship init fish | source
 function reset_cursor_to_blink_underline --on-event fish_prompt
     echo -ne "\e[3 q"
 end
-
-
-starship init fish | source
