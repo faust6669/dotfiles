@@ -6,38 +6,70 @@ BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-echo -e "${BLUE}🚀 Starting CachyOS Dotfile Symlinking & Desktop Setup...${NC}"
+echo -e "${BLUE}🚀 Starting CachyOS Automation Deployment...${NC}"
 
-# Define the source (repo) and target (config)
 DOTFILES_DIR="$HOME/dotfiles"
 CONFIG_DIR="$HOME/.config"
+PKG_FILE="$DOTFILES_DIR/packages.txt"
 
-# Create .config if it doesn't exist
+# --- 0. AUTOMATED PACKAGE INSTALLATION ---
+if [ -f "$PKG_FILE" ]; then
+    echo -e "${BLUE}📦 Reading package list from $PKG_FILE...${NC}"
+
+    # Extract packages, ignoring comments, trailing comments, and empty lines
+    pkgs=$(grep -v '^#' "$PKG_FILE" | sed 's/#.*//' | awk '{print $1}')
+
+    # Separate native pacman packages vs AUR packages
+    pacman_pkgs=""
+    aur_pkgs=""
+
+    # Determine default AUR helper on CachyOS
+    AUR_HELPER="paru"
+    if ! command -v paru &> /dev/null; then
+        AUR_HELPER="yay"
+    fi
+
+    for pkg in $pkgs; do
+        # If package ends in -bin or -git, or if pacman can't find it natively, flag as AUR
+        if [[ "$pkg" == *"-bin"* || "$pkg" == *"-git"* ]] || ! pacman -Si "$pkg" &> /dev/null; then
+            aur_pkgs="$aur_pkgs $pkg"
+        else
+            pacman_pkgs="$pacman_pkgs $pkg"
+        fi
+    done
+
+    # Install official repo packages
+    if [ -n "$pacman_pkgs" ]; then
+        echo -e "${BLUE}System: Installing official repository packages...${NC}"
+        sudo pacman -S --needed --noconfirm $pacman_pkgs
+    fi
+
+    # Install AUR packages
+    if [ -n "$aur_pkgs" ]; then
+        echo -e "${BLUE}AUR: Installing specialized packages via $AUR_HELPER...${NC}"
+        $AUR_HELPER -S --needed --noconfirm $aur_pkgs
+    fi
+else
+    echo -e "${RED}⚠️  packages.txt not found at $PKG_FILE. Skipping app installation.${NC}"
+fi
+
+# --- 1. FISH SETUP ---
+echo -e "${BLUE}Setting up Fish...${NC}"
 mkdir -p "$CONFIG_DIR"
 
-# Function to safely symlink
 link_file() {
     local src=$1
     local dst=$2
-
     if [ ! -e "$src" ]; then
         echo -e "${RED}❌ Source missing:${NC} $src"
         return
     fi
-
-    # Remove existing file or symlink to prevent "folder inside folder" errors
     rm -rf "$dst"
-
-    # Create the parent directory for the destination
     mkdir -p "$(dirname "$dst")"
-
-    # Create the link
     ln -s "$src" "$dst"
     echo -e "${GREEN}✅ Linked:${NC} $dst -> $src"
 }
 
-# --- 1. FISH SETUP ---
-echo -e "${BLUE}Setting up Fish...${NC}"
 link_file "$DOTFILES_DIR/fish/.config/fish/config.fish"      "$CONFIG_DIR/fish/config.fish"
 link_file "$DOTFILES_DIR/fish/.config/fish/fish_variables"   "$CONFIG_DIR/fish/fish_variables"
 link_file "$DOTFILES_DIR/fish/.config/fish/conf.d"           "$CONFIG_DIR/fish/conf.d"
@@ -54,21 +86,11 @@ link_file "$DOTFILES_DIR/fastfetch.jsonc" "$CONFIG_DIR/fastfetch/config.jsonc"
 
 # --- 3. KDE PLASMA KEYBOARD SHORTCUTS ---
 echo -e "${BLUE}Configuring WezTerm Global Shortcut...${NC}"
-
-# Define your preferred shortcut key combo here
-# Note: Use 'Ctrl+Alt+T' or 'Ctrl+Shift+E' exactly as formatted below
 SHORTCUT_KEY="Ctrl+Alt+T"
-
 if command -v kwriteconfig6 &> /dev/null; then
-    # Write the shortcut key binding directly to KDE's global shortcut configuration
     kwriteconfig6 --file kglobalshortcutsrc --group "org.erikreider.ananke" --key "launch-wezterm" "$SHORTCUT_KEY,none,Launch WezTerm"
-
-    # Safely reload the KDE global shortcut daemon to apply changes instantly without logging out
     dbus-send --print-reply --dest=org.kde.kglobalaccel /component/org_erikreider_ananke org.kde.kglobalaccel.Component.reloadSettings &> /dev/null
-
     echo -e "${GREEN}✅ Shortcut set:${NC} Press $SHORTCUT_KEY to launch WezTerm."
-else
-    echo -e "${RED}⚠️  KDE Configuration tools not found. Skipping shortcut mapping.${NC}"
 fi
 
-echo -e "\n${BLUE}⭐ All set! Restart your terminal or use your new hotkey to roll.${NC}"
+echo -e "\n${BLUE}⭐ All set! System packages installed and configs deployed.${NC}"

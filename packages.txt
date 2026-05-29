@@ -1,0 +1,23 @@
+# --- System & Core Terminal Utilities ---
+ttf-firacode-nerd
+fastfetch
+yazi
+cava
+stow
+git
+github-cli
+ripgrep
+fd
+fzf
+
+# --- Development & Audio Lab Tools ---
+neovim
+python
+python-pip
+reaper
+yabridge-bin
+
+# --- Hardware, Engineering & 3D Printing ---
+bambustudio-bin
+sigrok-cli
+pulseview
