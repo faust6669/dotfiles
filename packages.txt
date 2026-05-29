@@ -10,7 +10,8 @@ ripgrep
 fd
 fzf
 lsd
-
+handlr
+gimp
 # --- Development & Audio Lab Tools ---
 neovim
 python

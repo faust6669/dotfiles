@@ -1,28 +1,39 @@
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# CACHYOS & BASIC DEFAULTS
+# 1. PATH & ENVIRONMENT (MUST BE AT THE TOP)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Ensure system and local binaries are found before starting Starship
+fish_add_path /usr/bin
+fish_add_path "/home/dave/.local/bin"
+
+# Point Starship to your dotfiles configuration
+set -gx STARSHIP_CONFIG ~/dotfiles/starship/.config/starship.toml
+
 # Raise file descriptor limit for performance (CachyOS/Wine/VST stability)
 ulimit -n 524288
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 2. INTERACTIVE SESSION SETUP
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if status is-interactive
-    # Standard CachyOS / Interactive shell setup
+    # Display system info
     fastfetch
+
+    # Force thin underline for all modes
+    set -g fish_cursor_default underline
+    set -g fish_cursor_insert underline
+    set -g fish_cursor_replace_one underline
+    set -g fish_cursor_visual underline
+
+    # Stop Fish from intercepting Ctrl+E so WezTerm can close panes
+    bind -e \ce
+
+    # Initialize Starship Prompt (Safe for interactive only)
+    starship init fish | source
 end
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# CURSOR & KEYBINDING TWEAKS
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Force thin underline for all modes
-set -g fish_cursor_default underline
-set -g fish_cursor_insert underline
-set -g fish_cursor_replace_one underline
-set -g fish_cursor_visual underline
-
-# Stop Fish from intercepting Ctrl+E so WezTerm can close panes
-bind -e \ce
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ALIASES & ABBREVIATIONS
+# 3. ALIASES & ABBREVIATIONS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 alias dsync='rsync -avP'
 alias graph='git log --oneline --graph --decorate --all'
@@ -31,20 +42,18 @@ alias vst-win='cd "/mnt/windows/Program Files/Common Files/VST3/"'
 alias yz="yazi"
 
 # Terminal Resizing Abbreviations
-abbr -a rsz_tall  "printf '\e[8;60;120t'"
-abbr -a rsz_wide  "printf '\e[8;40;160t'"
-abbr -a rsz_reset "printf '\e[8;35;120t'"
+abbr -a rsz_tall  "printf '\e[;;t'"
+abbr -a rsz_wide  "printf '\e[;;t'"
+abbr -a rsz_reset "printf '\e[;;t'"
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# MY CUSTOM ABBREVIATIONS (Hard-Coded for Portability)
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-abbr -a tt --position anywhere "~"               # Your "Tilde" shortcut
-abbr -a lab 'source ~/env/bench/bin/activate.fish && cd ~/dotfiles/scripts'
-abbr -a dots  'dots'                             # Runs your GitHub sync function
-abbr -a gs    'git status'                       # Quick git check
-abbr -a bench 'cd ~/dotfiles/scripts'            # Quick jump to your tools
-abbr -a conf  'nano ~/.config/fish/config.fish'  # Edit this file fast
-abbr -a fresh 'source ~/.config/fish/config.fish; echo "🔄 Fish configuration reloaded!"' # refresh terminal
+# Custom Shortcuts
+abbr -a tt --position anywhere "~"
+abbr -a lab 'source ~/env/bench/bin/activatefish && cd ~/dotfiles/scripts'
+abbr -a dots 'dots'
+abbr -a gs 'git status'
+abbr -a bench 'cd ~/dotfiles/scripts'
+abbr -a conf 'kate ~/config/fish/configfish' # Updated to use Kate
+abbr -a fresh 'source ~/config/fish/configfish; echo "🔄 Fish configuration reloaded!"'
 
 # Modern LS replacement (lsd)
 if type -q lsd
@@ -55,56 +64,42 @@ if type -q lsd
 end
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# FUNCTIONS
+#  FUNCTIONS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function dots
-    # 1. Define our paths
     set -l dotdir "$HOME/dotfiles"
-    set -l target "$dotdir/CHEAT_SHEET.md"
+    set -l target "$dotdir/CHEAT_SHEETmd"
 
-    # 2. Refresh the Symlinks
     echo "🔗 Refreshing symlinks with Stow..."
     pushd $dotdir
     stow --restow */
     popd
 
-    # 3. Update Timestamp in Cheat Sheet
     if test -f "$target"
         set -l current_date (date "+%Y-%m-%d %H:%M:%S")
-        sed -i "s|Last Updated: .*|Last Updated: $current_date|" "$target"
-        echo "📝 Timestamp updated in CHEAT_SHEET.md"
+        sed -i "s|Last Updated: *|Last Updated: $current_date|" "$target"
+        echo "📝 Timestamp updated in CHEAT_SHEETmd"
     end
 
-    # 4. Git Operations
-    # Check if there are any changes (tracked or untracked) BEFORE staging
     if test -n "$(git -C $dotdir status --porcelain)"
         echo "📦 Staging changes in $dotdir..."
         git -C $dotdir add .
-
         echo "📝 Commit message (Enter for default):"
         read -l msg
-
         if test -z "$msg"
             set -l d (date '+%Y-%m-%d')
             set msg "Manual dotfile sync on $d"
         end
-
         echo "🚀 Committing and Pushing to GitHub (main)..."
         git -C $dotdir commit -m "$msg"
         git -C $dotdir push origin main
-
         echo "✅ System synced and GitHub updated!"
     else
-        echo "✨ No changes to commit. Everything is up to date!"
+        echo "✨ No changes to commit Everything is up to date!"
     end
 end
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# STARSHIP PROMPT (Keep at the end)
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-starship init fish | source
-
 # Force cursor to a blinking underline on every new prompt
 function reset_cursor_to_blink_underline --on-event fish_prompt
-    echo -ne "\e[3 q"
+    echo -ne "\e[ q"
 end
