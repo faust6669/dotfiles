@@ -1,96 +1,78 @@
+
 #!/usr/bin/env bash
 
-# Colors for pretty output
+# --- AUTOMATED SETUP SCRIPT ---
+# Tailored for CachyOS / Arch-based environments
+
+# Color codes for clean output
+RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
-RED='\033[0;31m'
-NC='\033[0m'
+NC='\033[0;0m' # No Color
 
-echo -e "${BLUE}🚀 Starting CachyOS Automation Deployment...${NC}"
+echo -e "${BLUE}Starting automated workspace deployment...${NC}"
 
-DOTFILES_DIR="$HOME/dotfiles"
-CONFIG_DIR="$HOME/.config"
-PKG_FILE="$DOTFILES_DIR/packages.txt"
+# --- 1. PACKAGE INSTALLER LOOP ---
+echo -e "${BLUE}Checking package requirements...${NC}"
 
-# --- 0. AUTOMATED PACKAGE INSTALLATION ---
-if [ -f "$PKG_FILE" ]; then
-    echo -e "${BLUE}📦 Reading package list from $PKG_FILE...${NC}"
-
-    # Extract packages, ignoring comments, trailing comments, and empty lines
-    pkgs=$(grep -v '^#' "$PKG_FILE" | sed 's/#.*//' | awk '{print $1}')
-
-    # Separate native pacman packages vs AUR packages
-    pacman_pkgs=""
-    aur_pkgs=""
-
-    # Determine default AUR helper on CachyOS
+# Detect AUR helper (prefers paru, falls back to yay)
+if command -v paru &> /dev/null; then
     AUR_HELPER="paru"
-    if ! command -v paru &> /dev/null; then
-        AUR_HELPER="yay"
-    fi
-
-    for pkg in $pkgs; do
-        # If package ends in -bin or -git, or if pacman can't find it natively, flag as AUR
-        if [[ "$pkg" == *"-bin"* || "$pkg" == *"-git"* ]] || ! pacman -Si "$pkg" &> /dev/null; then
-            aur_pkgs="$aur_pkgs $pkg"
-        else
-            pacman_pkgs="$pacman_pkgs $pkg"
-        fi
-    done
-
-    # Install official repo packages
-    if [ -n "$pacman_pkgs" ]; then
-        echo -e "${BLUE}System: Installing official repository packages...${NC}"
-        sudo pacman -S --needed --noconfirm $pacman_pkgs
-    fi
-
-    # Install AUR packages
-    if [ -n "$aur_pkgs" ]; then
-        echo -e "${BLUE}AUR: Installing specialized packages via $AUR_HELPER...${NC}"
-        $AUR_HELPER -S --needed --noconfirm $aur_pkgs
-    fi
+elif command -v yay &> /dev/null; then
+    AUR_HELPER="yay"
 else
-    echo -e "${RED}⚠️  packages.txt not found at $PKG_FILE. Skipping app installation.${NC}"
+    echo -e "${RED}Error: Neither paru nor yay was found! Please install an AUR helper first.${NC}"
+    exit 1
 fi
 
-# --- 1. FISH SETUP ---
-echo -e "${BLUE}Setting up Fish...${NC}"
-mkdir -p "$CONFIG_DIR"
+echo -e "${GREEN}Using helper: ${AUR_HELPER}${NC}"
 
-link_file() {
-    local src=$1
-    local dst=$2
-    if [ ! -e "$src" ]; then
-        echo -e "${RED}❌ Source missing:${NC} $src"
-        return
-    fi
-    rm -rf "$dst"
-    mkdir -p "$(dirname "$dst")"
-    ln -s "$src" "$dst"
-    echo -e "${GREEN}✅ Linked:${NC} $dst -> $src"
-}
+# Read packages.txt and bulk install cleanly
+PACKAGES_FILE="$HOME/dotfiles/packages.txt"
 
-link_file "$DOTFILES_DIR/fish/.config/fish/config.fish"      "$CONFIG_DIR/fish/config.fish"
-link_file "$DOTFILES_DIR/fish/.config/fish/fish_variables"   "$CONFIG_DIR/fish/fish_variables"
-link_file "$DOTFILES_DIR/fish/.config/fish/conf.d"           "$CONFIG_DIR/fish/conf.d"
-link_file "$DOTFILES_DIR/fish/.config/fish/functions"        "$CONFIG_DIR/fish/functions"
-link_file "$DOTFILES_DIR/fish/.config/fish/functions/cheat.fish" "$CONFIG_DIR/fish/functions/cheat.fish"
+if [ -f "$PACKAGES_FILE" ]; then
+    echo -e "${BLUE}Reading installation targets from packages.txt...${NC}"
+    # Read file line by line, stripping comments and empty lines
+    sed -e 's/#.*//' -e '/^$/d' "$PACKAGES_FILE" | while read -r package; do
+        if ! pacman -Qi "$package" &> /dev/null && ! pacman -Qg "$package" &> /dev/null; then
+            echo -e "${BLUE}Installing: ${package}...${NC}"
+            $AUR_HELPER -S --noconfirm "$package"
+        else
+            echo -e "${GREEN}✓ ${package} is already installed.${NC}"
+        fi
+    done
+else
+    echo -e "${RED}Warning: packages.txt not found at ${PACKAGES_FILE}. Skipping bulk install.${NC}"
+fi
 
-# --- 2. APP CONFIGS ---
-echo -e "${BLUE}Setting up Apps...${NC}"
-link_file "$DOTFILES_DIR/starship/.config/starship.toml" "$CONFIG_DIR/starship.toml"
-link_file "$DOTFILES_DIR/wezterm/.config/wezterm" "$CONFIG_DIR/wezterm"
-link_file "$DOTFILES_DIR/yazi/.config/yazi" "$CONFIG_DIR/yazi"
-link_file "$DOTFILES_DIR/cava/config" "$CONFIG_DIR/cava/config"
-link_file "$DOTFILES_DIR/fastfetch.jsonc" "$CONFIG_DIR/fastfetch/config.jsonc"
+# --- 2. CONFIGURATION SYMLINKS (STOW / ADOPT WORKFLOW) ---
+echo -e "${BLUE}Linking configuration environments...${NC}"
+
+# Ensure directories exist before managing links
+mkdir -p "$HOME/.config/fish"
+mkdir -p "$HOME/.config/wezterm"
+mkdir -p "$HOME/.config/yazi"
+
+# Move to dotfiles directory to execute stow execution safely
+cd "$HOME/dotfiles" || exit
+
+# Symlink configurations, adopting any active target files automatically
+stow --adopt -v -t "$HOME" fish wezterm yazi starship
 
 # --- 3. KDE PLASMA KEYBOARD SHORTCUTS ---
 echo -e "${BLUE}Configuring WezTerm Global Shortcut...${NC}"
-SHORTCUT_KEY="Ctrl+Alt+T"
+SHORTCUT_KEY="Ctrl+Shift+E"
+
 if command -v kwriteconfig6 &> /dev/null; then
-    kwriteconfig6 --file kglobalshortcutsrc --group "org.erikreider.ananke" --key "launch-wezterm" "$SHORTCUT_KEY,none,Launch WezTerm"
-    dbus-send --print-reply --dest=org.kde.kglobalaccel /component/org_erikreider_ananke org.kde.kglobalaccel.Component.reloadSettings &> /dev/null
+    # Create the native application launch entry for WezTerm in Plasma 6
+    kwriteconfig6 --file kglobalshortcutsrc --group "org.wezfurlong.wezterm.desktop" --key "_launch" "$SHORTCUT_KEY,none,Launch WezTerm"
+
+    # Reload the global shortcut daemon to apply changes immediately
+    dbus-send --print-reply --dest=org.kde.kglobalaccel /component/org_wezfurlong_wezterm_desktop org.kde.kglobalaccel.Component.reloadSettings &> /dev/null
+
     echo -e "${GREEN}✅ Shortcut set:${NC} Press $SHORTCUT_KEY to launch WezTerm."
+else
+    echo -e "${RED}Notice: kwriteconfig6 not found. Skipping shortcut automation.${NC}"
 fi
 
-echo -e "\n${BLUE}⭐ All set! System packages installed and configs deployed.${NC}"
+echo -e "${GREEN}🎉 Deployment complete! Run 'fresh' to spin up your new terminal environment.${NC}"

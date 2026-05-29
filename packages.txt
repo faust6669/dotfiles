@@ -19,6 +19,6 @@ reaper
 yabridge-bin
 
 # --- Hardware, Engineering & 3D Printing ---
-bambustudio-bin
+#bambustudio-bin
 sigrok-cli
 pulseview
