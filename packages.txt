@@ -12,6 +12,7 @@ fzf
 lsd
 handlr
 gimp
+qbittorent
 # --- Development & Audio Lab Tools ---
 neovim
 python
