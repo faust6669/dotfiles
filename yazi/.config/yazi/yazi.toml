@@ -1,0 +1,5 @@
+# File: ~/.config/yazi/yazi.toml
+[manager]
+linemode = "ls_equivalent"
+show_hidden = true
+show_symlink = true

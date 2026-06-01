@@ -103,3 +103,4 @@ end
 function reset_cursor_to_blink_underline --on-event fish_prompt
     echo -ne "\e[ q"
 end
+
