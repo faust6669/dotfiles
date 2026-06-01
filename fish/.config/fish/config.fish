@@ -40,6 +40,7 @@ alias graph='git log --oneline --graph --decorate --all'
 alias fix-audio='systemctl --user restart pipewire pipewire-pulse wireplumber'
 alias vst-win='cd "/mnt/windows/Program Files/Common Files/VST3/"'
 alias yz="yazi"
+alias fresh="source ~/dotfiles/fish/.config/fish/config.fish; echo '🔄 Fish configuration reloaded!'"
 
 # Terminal Resizing Abbreviations
 abbr -a rsz_tall  "printf '\e[;;t'"
@@ -53,7 +54,7 @@ abbr -a dots 'dots'
 abbr -a gs 'git status'
 abbr -a bench 'cd ~/dotfiles/scripts'
 abbr -a conf 'kate ~/config/fish/configfish' # Updated to use Kate
-abbr -a fresh  source ~/config/fish/config.fish; echo "🔄 Fish configuration reloaded!"'
+
 
 # Modern LS replacement (lsd)
 if type -q lsd
