@@ -53,7 +53,7 @@ abbr -a dots 'dots'
 abbr -a gs 'git status'
 abbr -a bench 'cd ~/dotfiles/scripts'
 abbr -a conf 'kate ~/config/fish/configfish' # Updated to use Kate
-abbr -a fresh 'source ~/config/fish/configfish; echo "🔄 Fish configuration reloaded!"'
+abbr -a fresh  source ~/config/fish/config.fish; echo "🔄 Fish configuration reloaded!"'
 
 # Modern LS replacement (lsd)
 if type -q lsd

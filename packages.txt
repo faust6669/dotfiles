@@ -13,7 +13,8 @@ lsd
 handlr
 gimp
 libreoffice-still
-qbittorent
+qbittorrent
+qpwgraph
 # --- Development & Audio Lab Tools ---
 neovim
 python
