@@ -12,6 +12,7 @@ fzf
 lsd
 handlr
 gimp
+libreoffice-still
 qbittorent
 # --- Development & Audio Lab Tools ---
 neovim
