@@ -9,6 +9,7 @@ github-cli
 ripgrep
 fd
 fzf
+easyeffects
 lsd
 handlr
 gimp
