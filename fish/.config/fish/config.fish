@@ -1,4 +1,3 @@
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 1. PATH & ENVIRONMENT (MUST BE AT THE TOP)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -19,11 +18,11 @@ if status is-interactive
     # Display system info
     fastfetch
 
-    # Force thin underline for all modes
-    set -g fish_cursor_default underline
-    set -g fish_cursor_insert underline
-    set -g fish_cursor_replace_one underline
-    set -g fish_cursor_visual underline
+    # Force thin horizontal line for all modes
+    set -g fish_cursor_default line
+    set -g fish_cursor_insert line
+    set -g fish_cursor_replace_one line
+    set -g fish_cursor_visual line
 
     # Stop Fish from intercepting Ctrl+E so WezTerm can close panes
     bind -e \ce
@@ -56,17 +55,20 @@ abbr -a bench 'cd ~/dotfiles/scripts'
 abbr -a conf 'kate ~/config/fish/configfish' # Updated to use Kate
 
 
-# Modern LS replacement (lsd)
-if type -q lsd
-    abbr -a ls 'lsd --icon always --group-dirs first'
-    abbr -a ll 'lsd -l --icon always --group-dirs first'
-    abbr -a la 'lsd -la --icon always --group-dirs first'
-    abbr -a tree 'lsd --tree --icon always'
-end
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #  FUNCTIONS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Optimized Yazi wrapper (Changes shell CWD on exit)
+function y
+    set tmp (mktemp -t "yazi-cwd.XXXXXX")
+    yazi --cwd-file="$tmp" $argv
+    if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+        builtin cd -- "$cwd"
+    end
+    rm -f -- "$tmp"
+end
+
 function dots
     set -l dotdir "$HOME/dotfiles"
     set -l target "$dotdir/CHEAT_SHEETmd"
@@ -100,8 +102,10 @@ function dots
     end
 end
 
-# Force cursor to a blinking underline on every new prompt
+# Sets shape to blinking underline and manually paints it to match your theme color
 function reset_cursor_to_blink_underline --on-event fish_prompt
-    echo -ne "\e[ q"
+    # 1. Sets cursor shape to a blinking underline
+    echo -ne "\e[3 q"
+    # 2. Sets cursor color to Cyan (#00FFFF). Change this hex color if your name is a different color!
+    echo -ne "\e]12;#00FFFF\a"
 end
-
