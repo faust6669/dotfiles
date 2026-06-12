@@ -10,7 +10,7 @@ ripgrep
 fd
 fzf
 easyeffects
-lsd
+android-tools
 handlr
 gimp
 libreoffice-still
