@@ -6,6 +6,7 @@ cava
 stow
 git
 github-cli
+gnu-netcat
 ripgrep
 fd
 fzf
