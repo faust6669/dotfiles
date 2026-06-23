@@ -31,16 +31,15 @@ PACKAGES_FILE="$HOME/dotfiles/packages.txt"
 
 if [ -f "$PACKAGES_FILE" ]; then
     echo -e "${BLUE}Reading installation targets from packages.txt...${NC}"
-
-    # Using file descriptor 3 (<&3) protects stdin so AUR helpers can prompt safely if needed
-    while read -r package <&3; do
+    # Read file line by line, stripping comments and empty lines
+    sed -e 's/#.*//' -e '/^$/d' "$PACKAGES_FILE" | while read -r package; do
         if ! pacman -Qi "$package" &> /dev/null && ! pacman -Qg "$package" &> /dev/null; then
             echo -e "${BLUE}Installing: ${package}...${NC}"
             $AUR_HELPER -S --noconfirm "$package"
         else
             echo -e "${GREEN}✓ ${package} is already installed.${NC}"
         fi
-    done 3< <(sed -e 's/#.*//' -e '/^$/d' "$PACKAGES_FILE")
+    done
 else
     echo -e "${RED}Warning: packages.txt not found at ${PACKAGES_FILE}. Skipping bulk install.${NC}"
 fi
