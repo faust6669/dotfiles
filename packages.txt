@@ -6,8 +6,8 @@ cava
 stow
 git
 github-cli
-gnu-netcat
-ripgrep
+openbsd-netcat
+grep
 fd
 fzf
 easyeffects
@@ -17,6 +17,7 @@ gimp
 libreoffice-still
 qbittorrent
 qpwgraph
+starship
 # --- Development & Audio Lab Tools ---
 neovim
 python
@@ -25,6 +26,6 @@ reaper
 yabridge-bin
 
 # --- Hardware, Engineering & 3D Printing ---
-#bambustudio-bin
+bambustudio-bin
 sigrok-cli
 pulseview

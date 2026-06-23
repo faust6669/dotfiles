@@ -1,0 +1,116 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 1. PATH & ENVIRONMENT (MUST BE AT THE TOP)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Ensure system and local binaries are found before starting Starship
+fish_add_path /usr/bin
+fish_add_path "$HOME/.local/bin"
+
+# Point Starship to your dotfiles configuration
+set -gx STARSHIP_CONFIG ~/dotfiles/starship/.config/starship.toml
+
+# Raise file descriptor limit for performance (CachyOS/Wine/VST stability)
+ulimit -n 524288
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 2. INTERACTIVE SESSION SETUP
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+if status is-interactive
+    # Display system info
+    fastfetch
+
+    # Force thin horizontal line for all modes
+    set -g fish_cursor_default line
+    set -g fish_cursor_insert line
+    set -g fish_cursor_replace_one line
+    set -g fish_cursor_visual line
+
+    # Stop Fish from intercepting Ctrl+E so WezTerm can close panes
+    bind -e \ce
+end
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 3. ALIASES & ABBREVIATIONS
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+alias dsync='rsync -avP'
+alias graph='git log --oneline --graph --decorate --all'
+alias fix-audio='systemctl --user restart pipewire pipewire-pulse wireplumber'
+alias vst-win='cd "/mnt/windows/Program Files/Common Files/VST3/"'
+alias yz="yazi"
+alias fresh="source ~/dotfiles/fish/.config/fish/config.fish; echo '🔄 Fish configuration reloaded!'"
+
+# Terminal Resizing Abbreviations
+abbr -a rsz_tall  "printf '\e[;;t'"
+abbr -a rsz_wide  "printf '\e[;;t'"
+abbr -a rsz_reset "printf '\e[;;t'"
+
+# Custom Shortcuts
+abbr -a tt --position anywhere "~"
+abbr -a lab 'source ~/env/bench/bin/activate.fish && cd ~/dotfiles/scripts'
+abbr -a dots 'dots'
+abbr -a gs 'git status'
+abbr -a bench 'cd ~/dotfiles/scripts'
+abbr -a conf 'kate ~/dotfiles/fish/.config/fish/config.fish'
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  FUNCTIONS
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Optimized Yazi wrapper (Changes shell CWD on exit)
+function y
+    set tmp (mktemp -t "yazi-cwd.XXXXXX")
+    yazi --cwd-file="$tmp" $argv
+    if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+        builtin cd -- "$cwd"
+    end
+    rm -f -- "$tmp"
+end
+
+function dots
+    set -l dotdir "$HOME/dotfiles"
+    set -l target "$dotdir/CHEAT_SHEET.md"
+
+    echo "🔗 Refreshing symlinks with Stow..."
+    pushd $dotdir
+    stow --restow */
+    popd
+
+    if test -f "$target"
+        set -l current_date (date "+%Y-%m-%d %H:%M:%S")
+        sed -i "s|Last Updated: *|Last Updated: $current_date|" "$target"
+        echo "📝 Timestamp updated in CHEAT_SHEET.md"
+    end
+
+    if test -n "$(git -C $dotdir status --porcelain)"
+        echo "📦 Staging changes in $dotdir..."
+        git -C $dotdir add .
+        echo "📝 Commit message (Enter for default):"
+        read -l msg
+        if test -z "$msg"
+            set -l d (date '+%Y-%m-%d')
+            set msg "Manual dotfile sync on $d"
+        end
+        echo "🚀 Committing and Pushing to GitHub (main)..."
+        git -C $dotdir commit -m "$msg"
+        git -C $dotdir push origin main
+        echo "✅ System synced and GitHub updated!"
+    else
+        echo "✨ No changes to commit. Everything is up to date!"
+    end
+end
+
+# Sets shape to blinking underline and manually paints it to match your theme color
+function reset_cursor_to_blink_underline --on-event fish_prompt
+    # 1. Sets cursor shape to a blinking underline
+    echo -ne "\e[3 q"
+    # 2. Sets cursor color to Cyan (#00FFFF). Change this hex color if your name is a different color!
+    echo -ne "\e]12;#00FFFF\a"
+end
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 5. INITIALIZE STARSHIP PROMPT (MUST BE AT THE ABSOLUTE BOTTOM)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# This forces Starship to evaluate last, stripping out CachyOS fallback prompts
+if status is-interactive
+    starship init fish | source
+end

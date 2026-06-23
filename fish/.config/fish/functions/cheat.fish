@@ -1,1 +1,0 @@
-/home/dave/dotfiles/fish/.config/fish/functions/cheat.fish
