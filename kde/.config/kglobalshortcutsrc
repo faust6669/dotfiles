@@ -3,8 +3,8 @@ _k_friendly_name=Activity Manager
 switch-to-activity-962e9e55-4cbe-48c4-b9d5-1f6fb9b35c79=none,none,Switch to activity "Default"
 
 [KDE Keyboard Layout Switcher]
-Switch to Last-Used Keyboard Layout=Meta+Alt+L,Meta+Alt+L,
-Switch to Next Keyboard Layout=Meta+Alt+K,Meta+Alt+K,
+Switch to Last-Used Keyboard Layout=Meta+Alt+L,Meta+Alt+L,Switch to Last-Used Keyboard Layout
+Switch to Next Keyboard Layout=Meta+Alt+K,Meta+Alt+K,Switch to Next Keyboard Layout
 _k_friendly_name=Keyboard Layout Switcher
 
 [kaccess]
@@ -36,10 +36,15 @@ _k_friendly_name=Session Management
 
 [kwin]
 Activate Window Demanding Attention=Meta+Ctrl+A,Meta+Ctrl+A,Activate Window Demanding Attention
+Cube=Meta+C,none,Toggle Cube
 Cycle Overview=none,none,Cycle through Overview and Grid View
 Cycle Overview Opposite=none,none,Cycle through Grid View and Overview
 Decrease Opacity=none,none,Decrease Opacity of Active Window by 5%
 Edit Tiles=Meta+T,Meta+T,Toggle Tiles Editor
+Expose=Ctrl+F9\tMeta+F9,Ctrl+F9\tMeta+F9,Toggle Present Windows (Current desktop)
+ExposeAll=Launch (C)\tCtrl+F10\tMeta+F10,Launch (C)\tCtrl+F10\tMeta+F10,Toggle Present Windows (All desktops)
+ExposeClass=Ctrl+F7\tMeta+F7,Ctrl+F7\tMeta+F7,Toggle Present Windows (Window class)
+ExposeClassCurrentDesktop=none,none,Toggle Present Windows (Window class on current desktop)
 Grid View=Meta+G,Meta+G,Toggle Grid View
 Increase Opacity=none,none,Increase Opacity of Active Window by 5%
 Kill Window=Meta+Ctrl+Esc,Meta+Ctrl+Esc,Kill Window
@@ -104,6 +109,7 @@ Switch to Screen to the Left=none,none,Switch to Screen to the Left
 Switch to Screen to the Right=none,none,Switch to Screen to the Right
 Toggle Night Color=none,none,Suspend/Resume Night Light
 Toggle Window Raise/Lower=none,none,Toggle Window Raise/Lower
+ToggleMouseClick=Meta+*,Meta+*,Toggle Mouse Click Animation
 Walk Through Windows=Alt+Tab\tMeta+Tab,Alt+Tab\tMeta+Tab,Walk Through Windows
 Walk Through Windows (Reverse)=Alt+Shift+Tab\tMeta+Shift+Tab,Alt+Shift+Tab\tMeta+Shift+Tab,Walk Through Windows (Reverse)
 Walk Through Windows Alternative=none,none,Walk Through Windows Alternative
@@ -215,9 +221,6 @@ seekforwardmedia=Media Fast Forward,Media Fast Forward,Media playback seek forwa
 seekforwardmedialong=none,none,Media playback seek forward 30s
 stopmedia=Media Stop,Media Stop,Stop media playback
 
-[org.wezfurlong.wezterm.desktop]
-_launch=Ctrl+Shift+E,none,WezTerm
-
 [org_kde_powerdevil]
 Decrease Keyboard Brightness=Keyboard Brightness Down,Keyboard Brightness Down,Decrease Keyboard Brightness
 Decrease Screen Brightness=Monitor Brightness Down,Monitor Brightness Down,Decrease Screen Brightness
@@ -235,7 +238,8 @@ _k_friendly_name=Power Management
 powerProfile=Battery\tMeta+B,Battery\tMeta+B,Switch Power Profile
 
 [plasmashell]
-_k_friendly_name=Plasma
+Slideshow Wallpaper Next Image=none,none,Next Wallpaper Image
+_k_friendly_name=plasmashell
 activate application launcher=Meta\tAlt+F1,Meta\tAlt+F1,Activate Application Launcher
 activate task manager entry 1=Meta+1,Meta+1,Activate Task Manager Entry 1
 activate task manager entry 10=none,none,Activate Task Manager Entry 10
@@ -255,6 +259,8 @@ cycleNextAction=none,none,Next History Item
 cyclePrevAction=none,none,Previous History Item
 edit_clipboard=none,none,Edit Contents…
 manage activities=Meta+Q,Meta+Q,Show Activity Switcher
+next activity=Meta+A,none,Walk through activities
+previous activity=Meta+Shift+A,none,Walk through activities (Reverse)
 repeat_action=none,none,Manually Invoke Action on Current Clipboard
 show dashboard=Ctrl+F12,Ctrl+F12,Show Desktop
 show-barcode=none,none,Show Barcode…
@@ -262,6 +268,9 @@ show-on-mouse-pos=Meta+V,Meta+V,Show Clipboard Items at Mouse Position
 switch to next activity=none,none,Switch to Next Activity
 switch to previous activity=none,none,Switch to Previous Activity
 toggle do not disturb=none,none,Toggle do not disturb
+
+[services][org.kde.spectacle.desktop]
+ActiveWindowScreenShot=Meta+S
 
 [services][org.wezfurlong.wezterm.desktop]
 _launch=Ctrl+Shift+E

@@ -1,5 +1,5 @@
-# Main prompt on the left
-format = "$username$hostname$directory$git_branch$character"
+# Main prompt on the left with Arch logo hardcoded
+format = "󰣇 $username$hostname$directory$git_branch$character"
 
 # Move the time to the right side
 right_format = "$time"
@@ -26,4 +26,4 @@ disabled = false
 format = "[$time]($style)"
 style = "bold yellow"
 use_12hr = true
-time_format = "%T %p"  # This gives you "05:43:18 AM"
+time_format = "%T %p"
