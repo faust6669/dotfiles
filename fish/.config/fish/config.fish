@@ -1,6 +1,9 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 1. PATH & ENVIRONMENT (MUST BE AT THE TOP)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Fix persistent WezTerm titlebar update bug by forcing XWayland
+set -gx WEZTERM_ENABLE_WAYLAND 0
+
 # Ensure system and local binaries are found before starting Starship
 fish_add_path /usr/bin
 fish_add_path "/home/dave/.local/bin"
@@ -52,7 +55,7 @@ abbr -a lab 'source ~/env/bench/bin/activatefish && cd ~/dotfiles/scripts'
 abbr -a dots 'dots'
 abbr -a gs 'git status'
 abbr -a bench 'cd ~/dotfiles/scripts'
-abbr -a conf 'kate ~/config/fish/configfish' # Updated to use Kate
+abbr -a conf 'kate ~/config/fish/config.fish' # Updated to use Kate
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
